@@ -38,9 +38,7 @@ public class UserController {
 
     @GetMapping("/getUser/{anything}")
     public Set<User> getUser(@PathVariable("anything")String anything){
-
         Set<User> userList = new HashSet<>();
-
         if(anything.matches("(\\d){6}")){
             userList.addAll(userService.selectAllUsersByPincode(Integer.parseInt(anything)));
         } else if(anything.matches(EMAIL_REGEXP.getRegExp())){
