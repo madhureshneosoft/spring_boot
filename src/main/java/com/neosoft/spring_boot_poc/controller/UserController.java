@@ -9,13 +9,13 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.HashSet;
+import java.util.InputMismatchException;
 import java.util.List;
 import java.util.Set;
 
-import static com.neosoft.spring_boot_poc.RegExpression.EMAIL_REGEXP;
-import static com.neosoft.spring_boot_poc.RegExpression.MOBILE_REGEXP;
+import static com.neosoft.spring_boot_poc.RegExpression.*;
 
-@RequestMapping("api/user")
+@RequestMapping("/api/user")
 @RestController
 public class UserController {
 
@@ -27,8 +27,12 @@ public class UserController {
     }
 
     @PostMapping("")
-    public void addNewUser(@Valid @RequestBody User user){
-        userService.addUser(user);
+    public User addNewUser(@Valid @RequestBody User user){
+        if(user.getDateOfJoin().compareTo(user.getDateOfBirth())>0) {
+            return userService.addUser(user);
+        } else {
+            throw new InputMismatchException();
+        }
     }
 
     @GetMapping("")
@@ -39,17 +43,19 @@ public class UserController {
     @GetMapping("/getUser/{anything}")
     public Set<User> getUser(@PathVariable("anything")String anything){
         Set<User> userList = new HashSet<>();
-        if(anything.matches("(\\d){6}")){
+        if(anything.matches(PINCODE_REGEXP.getRegExp())){
             userList.addAll(userService.selectAllUsersByPincode(Integer.parseInt(anything)));
         } else if(anything.matches(EMAIL_REGEXP.getRegExp())){
             userList.add(userService.selectByEmailId(anything));
         } else if(anything.matches(MOBILE_REGEXP.getRegExp())){
             userList.add(userService.selectByMobileNumber(anything));
-        } else {
+        } else if(anything.matches(DATE_REGEXP.getRegExp())){
+            userList.addAll(userService.selectAllUsersByBirthDate(anything));
+            userList.addAll(userService.selectAllUsersByJoinDate(anything));
+        }else {
             userList.addAll(userService.selectAllUsersByFirstName(anything));
             userList.addAll(userService.selectAllUsersByLastName(anything));
         }
-
         return userList;
     }
 
@@ -68,9 +74,9 @@ public class UserController {
     }
 
     @PutMapping("/{userId}")
-    public void editUser(@PathVariable("userId") int id,@RequestBody User user){
+    public User editUser(@PathVariable("userId") int id,@RequestBody User user){
         user.setId(id);
-        userService.editUser(user);
+        return userService.editUser(user);
     }
 
     @DeleteMapping("/softDelete/{userId}")

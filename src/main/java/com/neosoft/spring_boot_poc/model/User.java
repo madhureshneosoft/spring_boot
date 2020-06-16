@@ -1,13 +1,15 @@
 package com.neosoft.spring_boot_poc.model;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import javax.persistence.*;
 import javax.validation.constraints.*;
 import java.sql.Date;
 
+@ToString
+@NoArgsConstructor
+@AllArgsConstructor
 @Entity(name = "user_tbl")
 @Getter
 @Setter
@@ -30,18 +32,18 @@ public class User {
 
     @Column(unique = true)
     @NotNull
-    @Pattern(regexp = "^[789][\\\\d]{9}")
+    @Pattern(regexp = "^[789](\\d){9}")
     private String mobileNumber;
 
     @Column
     @NotNull
-    @JsonFormat(pattern = "yyyy/MM/dd")
-    private Date dateOfBirth;  //format : dd/mm/yyyy
+    @JsonFormat(pattern = "yyyy-MM-dd")
+    private Date dateOfBirth;  //format : dd-mm-yyyy
 
     @Column
     @NotNull
-    @JsonFormat(pattern = "yyyy/MM/dd")
-    private Date dateOfJoin;  //format : dd/mm/yyyy
+    @JsonFormat(pattern = "yyyy-MM-dd")
+    private Date dateOfJoin;  //format : dd-mm-yyyy
 
     @Column(unique = true)
     @NotNull

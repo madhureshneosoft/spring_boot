@@ -5,6 +5,7 @@ import com.neosoft.spring_boot_poc.repo.UserRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.sql.Date;
 import java.util.List;
 
 @Service
@@ -18,8 +19,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void addUser(User user) {
-        userRepo.save(user);
+    public User addUser(User user) {
+        return userRepo.save(user);
     }
 
     @Override
@@ -32,10 +33,10 @@ public class UserServiceImpl implements UserService {
         return userRepo.findByMobileNumberAndActiveTrue(mobileNumber);
     }
 
-    @Override
-    public List<User> selectAllUsers() {
-        return userRepo.findAll();
-    }
+//    @Override
+//    public List<User> selectAllUsers() {
+//        return userRepo.findAll();
+//    }
 
     @Override
     public List<User> selectAllUsersByPincode(int pincode) {
@@ -53,13 +54,23 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public List<User> selectAllUsersByBirthDate(String birthDate) {
+        return userRepo.findAllByDateOfBirthAndActiveTrue(Date.valueOf(birthDate));
+    }
+
+    @Override
+    public List<User> selectAllUsersByJoinDate(String joinDate) {
+        return userRepo.findAllByDateOfJoinAndActiveTrue(Date.valueOf(joinDate));
+    }
+
+    @Override
     public List<User> selectAllActiveUsers() {
         return userRepo.findAllByActiveTrue();
     }
 
     @Override
-    public void editUser(User user) {
-        userRepo.save(user);
+    public User editUser(User user) {
+        return userRepo.save(user);
     }
 
     @Override
