@@ -8,8 +8,10 @@ import com.neosoft.spring_boot_poc.model.SortByBirthDate;
 import com.neosoft.spring_boot_poc.model.SortByJoiningDate;
 import com.neosoft.spring_boot_poc.model.User;
 import com.neosoft.spring_boot_poc.service.UserServiceImpl;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.experimental.results.ResultMatchers;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,9 +25,10 @@ import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import java.sql.Date;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.*;
 
 @RunWith(SpringRunner.class)
@@ -68,7 +71,7 @@ public class UserControllerTest {
                 "test1@gmail.com",
                 "address 1",
                 true,
-                380015);
+                380061);
         user2 = new User(2,
                 "test2",
                 "test2",
@@ -98,7 +101,7 @@ public class UserControllerTest {
                 "test4@gmail.com",
                 "address 4",
                 true,
-                250061);
+                380061);
         user5 = new User(5,
                 "test5",
                 "test5",
@@ -149,6 +152,37 @@ public class UserControllerTest {
     }
 
     @Test
+    public void addNewUserWrong() throws Exception {
+
+        Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").create();
+
+        String userTempJson = "{\n" +
+                "    \"firstName\" : \"test54\",\n" +
+                "    \"lastName\" : \"test54\",\n" +
+                "    \"mobileNumber\" : \"9978607854\",\n" +
+                "    \"dateOfBirth\" : \"2020-09-19\",\n" +
+                "    \"dateOfJoin\" : \"2020-01-07\",\n" +
+                "    \"emailId\" : \"test54.test@gmail.com\",\n" +
+                "    \"address\" : \"address 54\",\n" +
+                "    \"active\" : true,\n" +
+                "    \"pincode\" : 380091\n" +
+                "}";
+
+        User userTemp = gson.fromJson(userTempJson,User.class);
+
+        doReturn(userTemp).when(userService).addUser(Mockito.any());
+
+        mockMvc.perform(MockMvcRequestBuilders.post(url)
+                .content(userTempJson)
+                .characterEncoding("utf-8")
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(result -> assertTrue(result.getResolvedException() instanceof InputMismatchException))
+                .andDo(MockMvcResultHandlers.print());
+
+        verify(userService,times(0)).addUser(Mockito.any());
+    }
+
+    @Test
     public void getAllActiveUsers() throws Exception {
         List<User> userList = new ArrayList<>();
         userList.add(user1);
@@ -171,7 +205,7 @@ public class UserControllerTest {
     }
 
     @Test
-    public void getSpecificUser() throws Exception {
+    public void getSpecificUserByNumber() throws Exception {
         url += "/getUser/9978607891";
         List<User> users = new ArrayList<>();
         users.add(user1);
@@ -185,6 +219,85 @@ public class UserControllerTest {
                 .andExpect(MockMvcResultMatchers.status().isOk());
 
         verify(userService).selectByMobileNumber("9978607891");
+    }
+
+    @Test
+    public void getSpecificUserByEmail() throws Exception {
+        url += "/getUser/test1.test@gmail.com";
+
+        List<User> users = new ArrayList<>();
+        users.add(user1);
+
+        when(userService.selectByEmailId(anyString())).thenReturn(user1);
+
+        String response = objectMapper.writeValueAsString(users);
+
+        mockMvc.perform(MockMvcRequestBuilders.get(url))
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(MockMvcResultMatchers.content().json(response))
+                .andExpect(MockMvcResultMatchers.status().isOk());
+
+        verify(userService).selectByEmailId(anyString());
+    }
+
+    @Test
+    public void getSpecificUserByName() throws Exception {
+        url += "/getUser/test1";
+
+        List<User> users = new ArrayList<>();
+        users.add(user1);
+
+        when(userService.selectAllUsersByFirstName(anyString())).thenReturn(users);
+        when(userService.selectAllUsersByLastName(anyString())).thenReturn(users);
+
+        String response = objectMapper.writeValueAsString(users);
+
+        mockMvc.perform(MockMvcRequestBuilders.get(url))
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(MockMvcResultMatchers.content().json(response))
+                .andExpect(MockMvcResultMatchers.status().isOk());
+
+        verify(userService).selectAllUsersByFirstName(anyString());
+        verify(userService).selectAllUsersByLastName(anyString());
+    }
+
+    @Test
+    public void getAllUsersByBirthAndJoinDate() throws Exception {
+        url += "/getUser/2020-01-07";
+
+        List<User> users = new ArrayList<>();
+        users.add(user5);
+
+        when(userService.selectAllUsersByBirthDate(anyString())).thenReturn(users);
+        when(userService.selectAllUsersByJoinDate(anyString())).thenReturn(users);
+
+        String response = objectMapper.writeValueAsString(users);
+
+        mockMvc.perform(MockMvcRequestBuilders.get(url))
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(MockMvcResultMatchers.content().json(response))
+                .andExpect(MockMvcResultMatchers.status().isOk());
+
+        verify(userService).selectAllUsersByBirthDate(anyString());
+        verify(userService).selectAllUsersByJoinDate(anyString());
+    }
+
+    @Test
+    public void getUsersByPincode() throws Exception {
+        url += "/getUser/380061";
+
+        List<User> expectedResult = Arrays.asList(user1,user4);
+
+        when(userService.selectAllUsersByPincode(anyInt())).thenReturn(Arrays.asList(user1,user4));
+
+        String response = objectMapper.writeValueAsString(expectedResult);
+
+        mockMvc.perform(MockMvcRequestBuilders.get(url))
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(MockMvcResultMatchers.content().json(response))
+                .andExpect(MockMvcResultMatchers.status().isOk());
+
+        verify(userService).selectAllUsersByPincode(anyInt());
     }
 
     @Test
@@ -220,15 +333,25 @@ public class UserControllerTest {
 
     @Test
     public void softDeleteUser() throws Exception {
-        url += "/softDelete/5";
-        when(userService.selectUser(Mockito.anyInt())).thenReturn(user5);
-        user5.setActive(false);
-        doReturn(user5).when(userService).editUser(Mockito.any());
+        url += "/softDelete/1";
+
+        User expectedResult = user1;
+
+        expectedResult.setActive(false);
+
+        when(userService.selectUser(Mockito.anyInt())).thenReturn(user1);
+
+        doReturn(user1).when(userService).editUser(Mockito.any());
+
+        userController.softDeleteUser(anyInt());
+
         mockMvc.perform(MockMvcRequestBuilders.delete(url))
                 .andDo(MockMvcResultHandlers.print())
                 .andExpect(MockMvcResultMatchers.status().isOk());
 
-        verify(userService).selectUser(Mockito.anyInt());
+        assertThat(expectedResult).isEqualTo(user1);
+
+        verify(userService,times(2)).selectUser(Mockito.anyInt());
     }
 
     @Test
@@ -248,18 +371,13 @@ public class UserControllerTest {
     public void sortByJoinDate() throws Exception {
         url += "/sortByJoinDate";
 
-        List<User> userList = new ArrayList<>();
-        userList.add(user1);
-        userList.add(user2);
-        userList.add(user3);
-        userList.add(user4);
-        userList.add(user5);
-        userList.sort(new SortByJoiningDate());
+        List<User> userList = Arrays.asList(user1, user2, user4);
 
-        String response = objectMapper.writeValueAsString(userList);
+        List<User> expectedUserList = Arrays.asList(user2, user1, user4);
+
+        String response = objectMapper.writeValueAsString(expectedUserList);
 
         when(userService.selectAllActiveUsers()).thenReturn(userList);
-
 
         mockMvc.perform(MockMvcRequestBuilders.get(url))
                 .andDo(MockMvcResultHandlers.print())
@@ -272,18 +390,14 @@ public class UserControllerTest {
     @Test
     public void sortByBirthDate() throws Exception {
         url += "/sortByBirthDate";
-        List<User> userList = new ArrayList<>();
-        userList.add(user1);
-        userList.add(user2);
-        userList.add(user3);
-        userList.add(user4);
-        userList.add(user5);
-        userList.sort(new SortByBirthDate());
 
-        String response = objectMapper.writeValueAsString(userList);
+        List<User> userList = Arrays.asList(user1, user2, user4);
+
+        List<User> expectedUserList = Arrays.asList(user2, user1, user4);
+
+        String response = objectMapper.writeValueAsString(expectedUserList);
 
         when(userService.selectAllActiveUsers()).thenReturn(userList);
-
 
         mockMvc.perform(MockMvcRequestBuilders.get(url))
                 .andDo(MockMvcResultHandlers.print())

@@ -6,6 +6,7 @@ import lombok.*;
 import javax.persistence.*;
 import javax.validation.constraints.*;
 import java.sql.Date;
+import java.util.Objects;
 
 @ToString
 @NoArgsConstructor
@@ -13,6 +14,7 @@ import java.sql.Date;
 @Entity(name = "user_tbl")
 @Getter
 @Setter
+@EqualsAndHashCode
 public class User {
 
     @Id
@@ -37,12 +39,12 @@ public class User {
 
     @Column
     @NotNull
-    @JsonFormat(pattern = "yyyy-MM-dd")
+    @JsonFormat(pattern = "yyyy-MM-dd", timezone = "GMT")
     private Date dateOfBirth;  //format : dd-mm-yyyy
 
     @Column
     @NotNull
-    @JsonFormat(pattern = "yyyy-MM-dd")
+    @JsonFormat(pattern = "yyyy-MM-dd", timezone = "GMT")
     private Date dateOfJoin;  //format : dd-mm-yyyy
 
     @Column(unique = true)
@@ -62,6 +64,4 @@ public class User {
     @Min(111111)
     @Max(999999)
     private int pincode;
-
-
 }
