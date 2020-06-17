@@ -48,7 +48,7 @@ public class User {
 
     @Column(unique = true)
     @NotNull
-    @Pattern(regexp = "^([a-z])(([.])?[0-9a-z])*[@]([a-z])+[.]([a-z]){2,3}")
+    @Pattern(regexp = "^([a-z])(([.])?[0-9a-z])*[@]([a-z])+([.]([a-z])+){2,3}")
     private String emailId;
 
     @Column
