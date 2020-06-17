@@ -4,14 +4,10 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.neosoft.spring_boot_poc.model.SortByBirthDate;
-import com.neosoft.spring_boot_poc.model.SortByJoiningDate;
 import com.neosoft.spring_boot_poc.model.User;
 import com.neosoft.spring_boot_poc.service.UserServiceImpl;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.experimental.results.ResultMatchers;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,7 +21,10 @@ import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import java.sql.Date;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.InputMismatchException;
+import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -66,8 +65,8 @@ public class UserControllerTest {
                 "test1",
                 "test1",
                 "9978607891",
-                new Date(1997-1900,11,31),
-                new Date(2020-1900,2,15),
+                Date.valueOf("1997-12-31"),
+                Date.valueOf("2020-03-15"),
                 "test1@gmail.com",
                 "address 1",
                 true,
@@ -76,8 +75,8 @@ public class UserControllerTest {
                 "test2",
                 "test2",
                 "9978607892",
-                new Date(1991-1900,5,29),
-                new Date(2020-1900,1,5),
+                Date.valueOf("1991-06-29"),
+                Date.valueOf("2020-02-05"),
                 "test2@gmail.com",
                 "address 2",
                 true,
@@ -86,8 +85,8 @@ public class UserControllerTest {
                 "test3",
                 "test3",
                 "9978607893",
-                new Date(1993-1900,2,2),
-                new Date(2020-1900,5,19),
+                Date.valueOf("1993-03-02"),
+                Date.valueOf("2020-06-19"),
                 "test3@gmail.com",
                 "address 3",
                 false,
@@ -96,8 +95,8 @@ public class UserControllerTest {
                 "test4",
                 "test4",
                 "9978607894",
-                new Date(1999-1900,6,11),
-                new Date(2020-1900,3,3),
+                Date.valueOf("1999-07-11"),
+                Date.valueOf("2020-04-03"),
                 "test4@gmail.com",
                 "address 4",
                 true,
@@ -106,8 +105,8 @@ public class UserControllerTest {
                 "test5",
                 "test5",
                 "9978607895",
-                new Date(1998-1900,8,19),
-                new Date(2020-1900,0,7),
+                Date.valueOf("1998-09-19"),
+                Date.valueOf("2020-01-07"),
                 "test5.test@gmail.com",
                 "address 5",
                 false,

@@ -1,6 +1,5 @@
 package com.neosoft.spring_boot_poc.exception;
 
-import com.neosoft.spring_boot_poc.controller.UserController;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;

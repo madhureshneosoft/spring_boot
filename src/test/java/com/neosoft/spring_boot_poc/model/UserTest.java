@@ -2,15 +2,11 @@ package com.neosoft.spring_boot_poc.model;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.ArgumentMatchers.*;
-import static org.mockito.Mockito.verify;
 
 import java.sql.Date;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class UserTest {
 
@@ -23,8 +19,8 @@ public class UserTest {
                 "test1",
                 "test1",
                 "9978607891",
-                new Date(1997-1900,11,31),
-                new Date(2020-1900,2,15),
+                Date.valueOf("1997-12-31"),
+                Date.valueOf("2020-03-15"),
                 "test1@gmail.com",
                 "address 1",
                 true,
@@ -37,8 +33,8 @@ public class UserTest {
                 "newfn",
                 "newln",
                 "9999999999",
-                new Date(1990-1900,1,1),
-                new Date(2020-1900,3,3),
+                Date.valueOf("1990-02-01"),
+                Date.valueOf("2020-04-03"),
                 "newemail@gmail.com",
                 "new address",
                 false,
@@ -47,8 +43,8 @@ public class UserTest {
         user1.setActive(false);
         user1.setId(3);
         user1.setAddress("new address");
-        user1.setDateOfBirth(new Date(1990-1900,1,1));
-        user1.setDateOfJoin(new Date(2020-1900,3,3));
+        user1.setDateOfBirth(Date.valueOf("1990-02-01"));
+        user1.setDateOfJoin(Date.valueOf("2020-04-03"));
         user1.setEmailId("newemail@gmail.com");
         user1.setFirstName("newfn");
         user1.setLastName("newln");
