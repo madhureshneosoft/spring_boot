@@ -9,6 +9,7 @@ import java.util.List;
 public interface UserService {
 
     User addUser(User user);
+    List<User> selectAllInactiveUsers();
 //    List<User> selectAllUsers(); //for selecting active and Inactive users current not in use
     List<User> selectAllUsersByPincode(int pincode);
     List<User> selectAllUsersByFirstName(String firstName);

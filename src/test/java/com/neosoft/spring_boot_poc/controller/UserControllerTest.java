@@ -21,10 +21,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import java.sql.Date;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.InputMismatchException;
-import java.util.List;
+import java.util.*;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -158,10 +155,10 @@ public class UserControllerTest {
         String userTempJson = "{\n" +
                 "    \"firstName\" : \"test54\",\n" +
                 "    \"lastName\" : \"test54\",\n" +
-                "    \"mobileNumber\" : \"9978607854\",\n" +
+                "    \"mobileNumber\" : \"9978607859\",\n" +
                 "    \"dateOfBirth\" : \"2020-09-19\",\n" +
                 "    \"dateOfJoin\" : \"2020-01-07\",\n" +
-                "    \"emailId\" : \"test54.test@gmail.com\",\n" +
+                "    \"emailId\" : \"test1234@gmail.com\",\n" +
                 "    \"address\" : \"address 54\",\n" +
                 "    \"active\" : true,\n" +
                 "    \"pincode\" : 380091\n" +
@@ -186,9 +183,7 @@ public class UserControllerTest {
         List<User> userList = new ArrayList<>();
         userList.add(user1);
         userList.add(user2);
-        userList.add(user3);
         userList.add(user4);
-        userList.add(user5);
 
         when(userService.selectAllActiveUsers())
                 .thenReturn(userList);
@@ -204,7 +199,28 @@ public class UserControllerTest {
     }
 
     @Test
-    public void getSpecificUserByNumber() throws Exception {
+    public void getAllInActiveUsers() throws Exception {
+        url += "/inactive";
+
+        List<User> inactiveUserList = new ArrayList<>();
+        inactiveUserList.add(user3);
+        inactiveUserList.add(user5);
+
+        when(userService.selectAllInactiveUsers())
+                .thenReturn(inactiveUserList);
+
+        String response = objectMapper.writeValueAsString(inactiveUserList);
+
+        mockMvc.perform(MockMvcRequestBuilders.get(url).characterEncoding("UTF-8"))
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(MockMvcResultMatchers.content().json(response))
+                .andExpect(MockMvcResultMatchers.status().isOk());
+
+        verify(userService).selectAllInactiveUsers();
+    }
+
+    @Test
+    public void getSpecificUserByMobileNumber() throws Exception {
         url += "/getUser/9978607891";
         List<User> users = new ArrayList<>();
         users.add(user1);
@@ -221,15 +237,30 @@ public class UserControllerTest {
     }
 
     @Test
+    public void getSpecificUserById() throws Exception {
+        url += "/getUser/3";
+
+        when(userService.selectUser(anyInt())).thenReturn(user3);
+
+        String response = objectMapper.writeValueAsString(Collections.singletonList(user3));
+
+        mockMvc.perform(MockMvcRequestBuilders.get(url))
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(MockMvcResultMatchers.content().json(response))
+                .andExpect(MockMvcResultMatchers.status().isOk());
+
+        verify(userService).selectUser(anyInt());
+    }
+
+    @Test
     public void getSpecificUserByEmail() throws Exception {
         url += "/getUser/test1.test@gmail.com";
+        List<User> userList = Collections.singletonList(user1);
 
-        List<User> users = new ArrayList<>();
-        users.add(user1);
+//        when(userService.selectByEmailId(anyString())).thenReturn(user1);
+        doReturn(user1).when(userService).selectByEmailId(anyString());
 
-        when(userService.selectByEmailId(anyString())).thenReturn(user1);
-
-        String response = objectMapper.writeValueAsString(users);
+        String response = objectMapper.writeValueAsString(userList);
 
         mockMvc.perform(MockMvcRequestBuilders.get(url))
                 .andDo(MockMvcResultHandlers.print())

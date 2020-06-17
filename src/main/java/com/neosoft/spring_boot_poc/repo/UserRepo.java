@@ -10,6 +10,7 @@ import java.util.List;
 @Repository
 public interface UserRepo extends JpaRepository<User,Integer> {
 
+    List<User> findAllByActiveFalse();
     List<User> findAllByActiveTrue();
     List<User> findAllByFirstNameAndActiveTrue(String firstName);
     List<User> findAllByLastNameAndActiveTrue(String lastName);

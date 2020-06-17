@@ -23,17 +23,17 @@ public class User {
 
     @Column
     @NotNull
-    @Size(min = 2)
+    @Size(min = 2, message = "First Name too short (at least 2 characters required)")
     private String firstName;
 
     @Column
     @NotNull
-    @Size(min = 2)
+    @Size(min = 2, message = "Last Name too short (at least 2 characters required)")
     private String lastName;
 
     @Column(unique = true)
     @NotNull
-    @Pattern(regexp = "^[789](\\d){9}")
+    @Pattern(regexp = "^[789](\\d){9}",message = "Invalid mobile number")
     private String mobileNumber;
 
     @Column
@@ -48,7 +48,7 @@ public class User {
 
     @Column(unique = true)
     @NotNull
-    @Pattern(regexp = "^([A-Za-z0-9])(([.])?[0-9a-z])*[@]([a-z])+([.]([a-z])+){2,3}")
+    @Pattern(regexp = "^([A-Za-z0-9])(([.])?[0-9a-z])*[@]([a-z])+([.]([a-z])+){1,3}",message = "Invalid Email-Id")
     private String emailId;
 
     @Column

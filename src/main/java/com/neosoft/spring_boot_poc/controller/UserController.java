@@ -52,11 +52,18 @@ public class UserController {
         } else if(anything.matches(DATE_REGEXP.getRegExp())){
             userList.addAll(userService.selectAllUsersByBirthDate(anything));
             userList.addAll(userService.selectAllUsersByJoinDate(anything));
-        }else {
+        } else if(anything.matches("(\\d)+")){
+            userList.add(userService.selectUser(Integer.parseInt(anything)));
+        } else {
             userList.addAll(userService.selectAllUsersByFirstName(anything));
             userList.addAll(userService.selectAllUsersByLastName(anything));
         }
         return userList;
+    }
+
+    @GetMapping({"/inactive","/false"})
+    public Set<User> getInactiveUsers(){
+        return new HashSet<>(userService.selectAllInactiveUsers());
     }
 
     @GetMapping("/sortByBirthDate")

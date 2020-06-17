@@ -44,6 +44,11 @@ public class UserServiceImpl implements UserService {
 //    }
 
     @Override
+    public List<User> selectAllInactiveUsers() {
+        return userRepo.findAllByActiveFalse();
+    }
+
+    @Override
     public List<User> selectAllUsersByPincode(int pincode) {
         return userRepo.findAllByPincodeAndActiveTrue(pincode);
     }
