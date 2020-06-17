@@ -206,8 +206,7 @@ public class UserControllerTest {
         inactiveUserList.add(user3);
         inactiveUserList.add(user5);
 
-        when(userService.selectAllInactiveUsers())
-                .thenReturn(inactiveUserList);
+        when(userService.selectAllInactiveUsers()).thenReturn(inactiveUserList);
 
         String response = objectMapper.writeValueAsString(inactiveUserList);
 

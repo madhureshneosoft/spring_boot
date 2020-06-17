@@ -197,6 +197,19 @@ public class UserServiceTest {
     }
 
     @Test
+    public void selectAllInActiveUsers(){
+        List<User> expectedResult = Collections.singletonList(user3);
+
+        doReturn(expectedResult).when(userRepo).findAllByActiveFalse();
+
+        List<User> actualResult = userService.selectAllInactiveUsers();
+
+        assertThat(expectedResult).isEqualTo(actualResult);
+
+        verify(userRepo).findAllByActiveFalse();
+    }
+
+    @Test
     public void selectByEmailId(){
         User expectedResult = user1;
 
