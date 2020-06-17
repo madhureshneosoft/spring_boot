@@ -33,6 +33,11 @@ public class UserServiceImpl implements UserService {
         return userRepo.findByMobileNumberAndActiveTrue(mobileNumber);
     }
 
+/*
+  * Method to find All users including inactive and active (currently not in use)
+  * for future use if required
+*/
+
 //    @Override
 //    public List<User> selectAllUsers() {
 //        return userRepo.findAll();
