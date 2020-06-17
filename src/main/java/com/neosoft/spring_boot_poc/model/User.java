@@ -38,12 +38,12 @@ public class User {
 
     @Column
     @NotNull
-    @JsonFormat(pattern = "yyyy-MM-dd", timezone = "GMT")
+    @JsonFormat(pattern = "yyyy-MM-dd", timezone = "Europe/Madrid")
     private Date dateOfBirth;  //format : dd-mm-yyyy
 
     @Column
     @NotNull
-    @JsonFormat(pattern = "yyyy-MM-dd", timezone = "GMT")
+    @JsonFormat(pattern = "yyyy-MM-dd", timezone = "Europe/Madrid")
     private Date dateOfJoin;  //format : dd-mm-yyyy
 
     @Column(unique = true)

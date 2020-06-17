@@ -1,7 +1,7 @@
 package com.neosoft.spring_boot_poc.controller;
 
-import com.neosoft.spring_boot_poc.model.SortByBirthDate;
-import com.neosoft.spring_boot_poc.model.SortByJoiningDate;
+import com.neosoft.spring_boot_poc.util.SortByBirthDate;
+import com.neosoft.spring_boot_poc.util.SortByJoiningDate;
 import com.neosoft.spring_boot_poc.model.User;
 import com.neosoft.spring_boot_poc.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;

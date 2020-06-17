@@ -1,4 +1,6 @@
-package com.neosoft.spring_boot_poc.model;
+package com.neosoft.spring_boot_poc.util;
+
+import com.neosoft.spring_boot_poc.model.User;
 
 import java.util.Comparator;
 
