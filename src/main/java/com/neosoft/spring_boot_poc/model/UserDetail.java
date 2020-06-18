@@ -1,5 +1,6 @@
 package com.neosoft.spring_boot_poc.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.*;
 
@@ -7,19 +8,21 @@ import javax.persistence.*;
 import javax.validation.constraints.*;
 import java.sql.Date;
 
-@ToString
 @NoArgsConstructor
 @AllArgsConstructor
-@Entity(name = "user_tbl")
+@Entity(name = "user_detail_tbl")
 @Getter
 @Setter
-@EqualsAndHashCode
-public class User {
+public class UserDetail {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column
     private int id;
+
+    @JsonBackReference
+    @OneToOne
+    private User user;
 
     @Column
     @NotNull
@@ -39,12 +42,12 @@ public class User {
     @Column
     @NotNull
     @JsonFormat(pattern = "yyyy-MM-dd", timezone = "Europe/Madrid")
-    private Date dateOfBirth;  //format : dd-mm-yyyy
+    private Date dateOfBirth;
 
-    @Column
-    @NotNull
-    @JsonFormat(pattern = "yyyy-MM-dd", timezone = "Europe/Madrid")
-    private Date dateOfJoin;  //format : dd-mm-yyyy
+//    @Column
+//    @NotNull
+//    @JsonFormat(pattern = "yyyy-MM-dd", timezone = "Europe/Madrid")
+//    private Date dateOfJoin;  //format : dd-mm-yyyy
 
     @Column(unique = true)
     @NotNull
@@ -54,10 +57,6 @@ public class User {
     @Column
     @NotNull
     private String address;
-
-    @Column
-    @NotNull
-    private boolean active;
 
     @Column
     @Min(111111)
