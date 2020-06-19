@@ -28,7 +28,7 @@ public interface UserService {
     List<User> selectAllInactiveUsers();
 
     /**
-     * Method to Dynamically Sort fields
+     * Method to Dynamically Sort based on fields
      * @param field to be sorted
      * @return sorted list
      */
@@ -103,4 +103,11 @@ public interface UserService {
      * @param id int
      */
     void deleteUser(int id);
+
+    /**
+     * Dynamic searching
+     * @param query string
+     * @return list of user
+     */
+    List<User> dynamicSearch(String query);
 }

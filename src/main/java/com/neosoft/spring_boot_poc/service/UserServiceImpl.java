@@ -3,12 +3,14 @@ package com.neosoft.spring_boot_poc.service;
 import com.neosoft.spring_boot_poc.model.User;
 import com.neosoft.spring_boot_poc.model.UserProjectDetail;
 import com.neosoft.spring_boot_poc.repo.UserRepo;
+import com.neosoft.spring_boot_poc.repo.UserRepoImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.Date;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -17,10 +19,12 @@ import java.util.Optional;
 public class UserServiceImpl implements UserService {
 
     private final UserRepo userRepo;
+    private final UserRepoImpl userRepoImpl;
 
     @Autowired
-    public UserServiceImpl(UserRepo userRepo) {
+    public UserServiceImpl(UserRepo userRepo, UserRepoImpl userRepoImpl) {
         this.userRepo = userRepo;
+        this.userRepoImpl = userRepoImpl;
     }
 
 
@@ -132,6 +136,31 @@ public class UserServiceImpl implements UserService {
     public void deleteUser(int id) {
         Optional<User> user = userRepo.findById(id);
         user.ifPresent(userRepo::delete);
+    }
+
+    @Override
+    public List<User> dynamicSearch(String string) {
+        String[] split = string.split("[&]");
+        StringBuilder query = new StringBuilder("SELECT u FROM user_tbl u where ");
+
+        List<String> fields = new ArrayList<>();
+        List<String> values = new ArrayList<>();
+
+        for(String s: split){
+            String[] innerSplit = s.split("[=]");
+            fields.add(innerSplit[0]);
+            values.add(innerSplit[1]);
+        }
+
+        for(int i=0;i<split.length;i++){
+            if(i==0) {
+                query.append("u.").append(fields.get(i)).append("='").append(values.get(i)).append("'");
+            } else {
+                query.append(" and u.").append(fields.get(i)).append("='").append(values.get(i)).append("'");
+            }
+        }
+        System.out.println(query.toString());
+        return new ArrayList<>(userRepoImpl.dynamicSearch(query.toString()));
     }
 
     /*    @Override
