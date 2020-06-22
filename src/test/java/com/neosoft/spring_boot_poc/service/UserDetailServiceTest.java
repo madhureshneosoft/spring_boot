@@ -333,6 +333,96 @@ public class UserDetailServiceTest {
 
         verify(userRepo).findAll(any(Sort.class));
     }
+    @Test
+    public void selectAllActiveUsers(){
+        List<User> expectedResult = Arrays.asList(user1,user2,user4,user5);
+
+        doReturn(expectedResult).when(userRepo).findAllByActiveTrue();
+
+        List<User> actualResult = userService.selectAllActiveUsers();
+
+        assertThat(expectedResult).isEqualTo(actualResult);
+
+        verify(userRepo).findAllByActiveTrue();
+    }
+
+    @Test
+    public void selectAllInActiveUsers(){
+        List<User> expectedResult = Collections.singletonList(user3);
+
+        doReturn(expectedResult).when(userRepo).findAllByActiveFalse();
+
+        List<User> actualResult = userService.selectAllInactiveUsers();
+
+        assertThat(expectedResult).isEqualTo(actualResult);
+
+        verify(userRepo).findAllByActiveFalse();
+    }
+
+    @Test
+    public void editUser(){
+        User expectedResult = user2;
+        expectedResult.setActive(false);
+
+        doReturn(expectedResult).when(userRepo).save(any(User.class));
+        when(userRepo.findById(anyInt())).thenReturn(Optional.of(user2));
+
+        User actualResult = userService.editUser(expectedResult,2);
+
+        assertThat(expectedResult).isEqualTo(actualResult);
+
+        verify(userRepo).save(any());
+    }
+
+    @Test
+    public void selectUser(){
+        User expectedResult = user2;
+
+        when(userRepo.findById(anyInt())).thenReturn(Optional.of(user2));
+
+        User actualResult = userService.selectUser(2);
+
+        assertThat(expectedResult).isEqualTo(actualResult);
+
+        verify(userRepo).findById(anyInt());
+    }
+
+    @Test
+    public void deleteUser(){
+        doNothing().when(userRepo).deleteById(anyInt());
+        when(userRepo.findById(anyInt())).thenReturn(Optional.of(user2));
+        userService.deleteUser(2);
+        verify(userRepo).delete(any());
+    }
+
+    /*
+//
+//
+//    @Test
+//    public void selectByEmailId(){
+//        UserDetail expectedResult = user1;
+//
+//        doReturn(expectedResult).when(userRepo).findByEmailIdAndActiveTrue(anyString());
+//
+//        UserDetail actualResult = userService.selectByEmailId("test1.test@gmail.com");
+//
+//        assertThat(expectedResult).isEqualTo(actualResult);
+//
+//        verify(userRepo).findByEmailIdAndActiveTrue(anyString());
+//    }
+//
+//    @Test
+//    public void selectByMobileNumber(){
+//        UserDetail expectedResult = user3;
+//
+//        doReturn(expectedResult).when(userRepo).findByMobileNumberAndActiveTrue(anyString());
+//
+//        UserDetail actualResult = userService.selectByMobileNumber("9978607893");
+//
+//        assertThat(expectedResult).isEqualTo(actualResult);
+//
+//        verify(userRepo).findByMobileNumberAndActiveTrue(anyString());
+//    }
 //
 //    @Test
 //    public void selectAllUsersByLastName(){
@@ -373,91 +463,7 @@ public class UserDetailServiceTest {
 //        verify(userRepo).findAllByDateOfJoinAndActiveTrue(any(Date.class));
 //    }
 //
-    @Test
-    public void selectAllActiveUsers(){
-        List<User> expectedResult = Arrays.asList(user1,user2,user4,user5);
 
-        doReturn(expectedResult).when(userRepo).findAllByActiveTrue();
+         */
 
-        List<User> actualResult = userService.selectAllActiveUsers();
-
-        assertThat(expectedResult).isEqualTo(actualResult);
-
-        verify(userRepo).findAllByActiveTrue();
-    }
-
-    @Test
-    public void selectAllInActiveUsers(){
-        List<User> expectedResult = Collections.singletonList(user3);
-
-        doReturn(expectedResult).when(userRepo).findAllByActiveFalse();
-
-        List<User> actualResult = userService.selectAllInactiveUsers();
-
-        assertThat(expectedResult).isEqualTo(actualResult);
-
-        verify(userRepo).findAllByActiveFalse();
-    }
-//
-//    @Test
-//    public void selectByEmailId(){
-//        UserDetail expectedResult = user1;
-//
-//        doReturn(expectedResult).when(userRepo).findByEmailIdAndActiveTrue(anyString());
-//
-//        UserDetail actualResult = userService.selectByEmailId("test1.test@gmail.com");
-//
-//        assertThat(expectedResult).isEqualTo(actualResult);
-//
-//        verify(userRepo).findByEmailIdAndActiveTrue(anyString());
-//    }
-//
-//    @Test
-//    public void selectByMobileNumber(){
-//        UserDetail expectedResult = user3;
-//
-//        doReturn(expectedResult).when(userRepo).findByMobileNumberAndActiveTrue(anyString());
-//
-//        UserDetail actualResult = userService.selectByMobileNumber("9978607893");
-//
-//        assertThat(expectedResult).isEqualTo(actualResult);
-//
-//        verify(userRepo).findByMobileNumberAndActiveTrue(anyString());
-//    }
-//
-    @Test
-    public void editUser(){
-        User expectedResult = user2;
-        expectedResult.setActive(false);
-
-        doReturn(expectedResult).when(userRepo).save(any(User.class));
-        when(userRepo.findById(anyInt())).thenReturn(Optional.of(user2));
-
-        User actualResult = userService.editUser(expectedResult,2);
-
-        assertThat(expectedResult).isEqualTo(actualResult);
-
-        verify(userRepo).save(any());
-    }
-
-    @Test
-    public void selectUser(){
-        User expectedResult = user2;
-
-        when(userRepo.findById(anyInt())).thenReturn(Optional.of(user2));
-
-        User actualResult = userService.selectUser(2);
-
-        assertThat(expectedResult).isEqualTo(actualResult);
-
-        verify(userRepo).findById(anyInt());
-    }
-
-    @Test
-    public void deleteUser(){
-        doNothing().when(userRepo).deleteById(anyInt());
-        when(userRepo.findById(anyInt())).thenReturn(Optional.of(user2));
-        userService.deleteUser(2);
-        verify(userRepo).delete(any());
-    }
 }

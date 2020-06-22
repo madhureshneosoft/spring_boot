@@ -23,7 +23,7 @@ public class User {
 
     @Column(unique = true)
     @NotNull
-    @Pattern(regexp = "([A-Za-z0-9]){4,12}")
+    @Pattern(regexp = "([A-Za-z0-9]){4,12}", message = "invalid username")
     private String userName;
 
     @NotNull

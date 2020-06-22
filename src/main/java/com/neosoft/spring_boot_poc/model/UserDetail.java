@@ -59,7 +59,7 @@ public class UserDetail {
     private String address;
 
     @Column
-    @Min(111111)
-    @Max(999999)
+    @Min(value = 111111, message = "Invalid pincode")
+    @Max(value = 999999, message = "Invalid pincode")
     private int pincode;
 }

@@ -402,7 +402,82 @@ public class UserControllerTest {
 
         verify(userService).dynamicSearch(anyString());
     }
-/*
+
+    @Test
+    public void editUser() throws Exception {
+        url += "/1";
+
+        Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").create();
+
+        String userTempJson = "{\"id\":1,\"userName\":\"john\",\"password\":\"P@ssw0rd4\",\"active\":true,\"createDate\":\"2020-06-16\",\"updateDate\":\"2020-06-17\",\"userDetail\":{\"id\":1,\"firstName\":\"john\",\"lastName\":\"cena\",\"mobileNumber\":\"9978607890\",\"dateOfBirth\":\"1998-09-18\",\"emailId\":\"john@gmail.com\",\"address\":\"Vastrapur\",\"pincode\":380061},\"userEducationDetail\":{\"id\":1,\"sscPercentage\":79.94,\"hscPercentage\":89.13,\"sscBoardName\":\"gseb\",\"hscBoardName\":\"gsheb\",\"cgpa\":7.44,\"universityName\":\"GTU\"},\"userEmploymentDetail\":{\"id\":1,\"salary\":200000,\"workEmail\":\"john@neosoft.com\",\"workMobileNumber\":\"1111111111\",\"department\":\"JAVA\",\"dateOfJoin\":\"2020-01-06\",\"experience\":2},\"userProjectDetail\":[{\"id\":1,\"projectName\":\"Trade\",\"projectDetail\":\"Trade\",\"projectCompany\":\"XYZ\",\"active\":true,\"startDate\":\"2020-02-10\",\"endDate\":null},{\"id\":2,\"projectName\":\"Share\",\"projectDetail\":\"Share\",\"projectCompany\":\"ABC\",\"active\":false,\"startDate\":\"2011-07-23\",\"endDate\":\"2012-07-23\"}],\"userRole\":{\"id\":1,\"role\":\"Developer\"}}";
+
+        User userTemp = gson.fromJson(userTempJson, User.class);
+
+        doReturn(userTemp).when(userService).editUser(Mockito.any(),anyInt());
+
+        mockMvc.perform(MockMvcRequestBuilders.put(url)
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .characterEncoding("UTF-8")
+                    .content(userTempJson))
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(MockMvcResultMatchers.status().isOk());
+    }
+
+    @Test
+    public void softDeleteUser() throws Exception {
+        url += "/softDelete/1";
+
+        User expectedResult = user1;
+
+        expectedResult.setActive(false);
+
+        when(userService.selectUser(Mockito.anyInt())).thenReturn(user1);
+
+        doReturn(user1).when(userService).editUser(Mockito.any(),anyInt());
+
+        userController.softDeleteUser(anyInt());
+
+        mockMvc.perform(MockMvcRequestBuilders.delete(url))
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(MockMvcResultMatchers.status().isOk());
+
+        assertThat(expectedResult).isEqualTo(user1);
+
+        verify(userService,times(2)).selectUser(Mockito.anyInt());
+    }
+
+    @Test
+    public void hardDeleteUser() throws Exception {
+        url += "/hardDelete/5";
+
+        doNothing().when(userService).deleteUser(Mockito.anyInt());
+
+        mockMvc.perform(MockMvcRequestBuilders.delete(url))
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(MockMvcResultMatchers.status().isOk());
+
+        verify(userService).deleteUser(Mockito.anyInt());
+    }
+
+    @Test
+    public void sortByJoinDate() throws Exception {
+        url += "/sortByuserEmploymentDetail.dateOfJoin";
+
+        List<User> userList = Arrays.asList(user1, user2, user4, user5);
+
+        String response = objectMapper.writeValueAsString(userList);
+
+        when(userService.selectAllUserSortBy(anyString())).thenReturn(userList);
+
+        mockMvc.perform(MockMvcRequestBuilders.get(url))
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(MockMvcResultMatchers.content().json(response))
+                .andExpect(MockMvcResultMatchers.status().isOk());
+
+        verify(userService).selectAllUserSortBy(anyString());
+    }
+
+    /*
 //    @Test
 //    public void getSpecificUserById() throws Exception {
 //        url += "/getUser/3";
@@ -498,78 +573,5 @@ public class UserControllerTest {
 //    }
 //
  */
-    @Test
-    public void editUser() throws Exception {
-        url += "/1";
-
-        Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").create();
-
-        String userTempJson = "{\"id\":1,\"userName\":\"john\",\"password\":\"P@ssw0rd4\",\"active\":true,\"createDate\":\"2020-06-16\",\"updateDate\":\"2020-06-17\",\"userDetail\":{\"id\":1,\"firstName\":\"john\",\"lastName\":\"cena\",\"mobileNumber\":\"9978607890\",\"dateOfBirth\":\"1998-09-18\",\"emailId\":\"john@gmail.com\",\"address\":\"Vastrapur\",\"pincode\":380061},\"userEducationDetail\":{\"id\":1,\"sscPercentage\":79.94,\"hscPercentage\":89.13,\"sscBoardName\":\"gseb\",\"hscBoardName\":\"gsheb\",\"cgpa\":7.44,\"universityName\":\"GTU\"},\"userEmploymentDetail\":{\"id\":1,\"salary\":200000,\"workEmail\":\"john@neosoft.com\",\"workMobileNumber\":\"1111111111\",\"department\":\"JAVA\",\"dateOfJoin\":\"2020-01-06\",\"experience\":2},\"userProjectDetail\":[{\"id\":1,\"projectName\":\"Trade\",\"projectDetail\":\"Trade\",\"projectCompany\":\"XYZ\",\"active\":true,\"startDate\":\"2020-02-10\",\"endDate\":null},{\"id\":2,\"projectName\":\"Share\",\"projectDetail\":\"Share\",\"projectCompany\":\"ABC\",\"active\":false,\"startDate\":\"2011-07-23\",\"endDate\":\"2012-07-23\"}],\"userRole\":{\"id\":1,\"role\":\"Developer\"}}";
-
-        User userTemp = gson.fromJson(userTempJson, User.class);
-
-        doReturn(userTemp).when(userService).editUser(Mockito.any(),anyInt());
-
-        mockMvc.perform(MockMvcRequestBuilders.put(url)
-                    .contentType(MediaType.APPLICATION_JSON)
-                    .characterEncoding("UTF-8")
-                    .content(userTempJson))
-                .andDo(MockMvcResultHandlers.print())
-                .andExpect(MockMvcResultMatchers.status().isOk());
-    }
-
-    @Test
-    public void softDeleteUser() throws Exception {
-        url += "/softDelete/1";
-
-        User expectedResult = user1;
-
-        expectedResult.setActive(false);
-
-        when(userService.selectUser(Mockito.anyInt())).thenReturn(user1);
-
-        doReturn(user1).when(userService).editUser(Mockito.any(),anyInt());
-
-        userController.softDeleteUser(anyInt());
-
-        mockMvc.perform(MockMvcRequestBuilders.delete(url))
-                .andDo(MockMvcResultHandlers.print())
-                .andExpect(MockMvcResultMatchers.status().isOk());
-
-        assertThat(expectedResult).isEqualTo(user1);
-
-        verify(userService,times(2)).selectUser(Mockito.anyInt());
-    }
-
-    @Test
-    public void hardDeleteUser() throws Exception {
-        url += "/hardDelete/5";
-
-        doNothing().when(userService).deleteUser(Mockito.anyInt());
-
-        mockMvc.perform(MockMvcRequestBuilders.delete(url))
-                .andDo(MockMvcResultHandlers.print())
-                .andExpect(MockMvcResultMatchers.status().isOk());
-
-        verify(userService).deleteUser(Mockito.anyInt());
-    }
-
-    @Test
-    public void sortByJoinDate() throws Exception {
-        url += "/sortByuserEmploymentDetail.dateOfJoin";
-
-        List<User> userList = Arrays.asList(user1, user2, user4, user5);
-
-        String response = objectMapper.writeValueAsString(userList);
-
-        when(userService.selectAllUserSortBy(anyString())).thenReturn(userList);
-
-        mockMvc.perform(MockMvcRequestBuilders.get(url))
-                .andDo(MockMvcResultHandlers.print())
-                .andExpect(MockMvcResultMatchers.content().json(response))
-                .andExpect(MockMvcResultMatchers.status().isOk());
-
-        verify(userService).selectAllUserSortBy(anyString());
-    }
 
 }
