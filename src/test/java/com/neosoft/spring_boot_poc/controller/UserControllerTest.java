@@ -6,6 +6,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.neosoft.spring_boot_poc.model.*;
 import com.neosoft.spring_boot_poc.service.UserServiceImpl;
+import org.apache.coyote.Response;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -19,6 +20,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
+import org.springframework.web.bind.MissingServletRequestParameterException;
 
 import java.sql.Date;
 import java.util.*;
@@ -343,6 +345,57 @@ public class UserControllerTest {
                 .andDo(MockMvcResultHandlers.print());
 
         verify(userService,times(1)).addUser(Mockito.any());
+    }
+
+    @Test
+    public void addNewUserMissingParameter() throws Exception {
+
+        String userTempJson = "{\"createDate\":\"2020-06-16\",\"updateDate\":\"2020-06-17\",\"userDetail\":{\"firstName\":\"john\",\"lastName\":\"cena\",\"dateOfBirth\":\"1999-06-18\",\"emailId\":\"john@gmail.com\",\"address\":\"Vastrapur\",\"pincode\":380061},\"userEducationDetail\":{\"sscPercentage\":79.94,\"hscPercentage\":89.13,\"sscBoardName\":\"gseb\",\"hscBoardName\":\"gsheb\",\"cgpa\":7.44,\"universityName\":\"GTU\"},\"userEmploymentDetail\":{\"salary\":200000,\"workEmail\":\"john@neosoft.com\",\"department\":\"JAVA\",\"dateOfJoin\":\"2020-01-06\",\"experience\":2},\"userProjectDetail\":[{\"projectName\":\"Trade\",\"projectDetail\":\"Trade\",\"projectCompany\":\"XYZ\",\"active\":true,\"startDate\":\"2020-02-10\",\"endDate\":null},{\"projectName\":\"Share\",\"projectDetail\":\"Share\",\"projectCompany\":\"ABC\",\"active\":false,\"startDate\":\"2011-07-23\",\"endDate\":\"2012-07-23\"}],\"userRole\":{\"role\":\"Developer\"}}";
+
+        doThrow(InputMismatchException.class).when(userService).addUser(any());
+
+        mockMvc.perform(MockMvcRequestBuilders.post(url)
+                .content(userTempJson)
+                .characterEncoding("utf-8")
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(MockMvcResultMatchers.status().isBadRequest())
+                .andDo(MockMvcResultHandlers.print());
+
+        verify(userService,times(0)).addUser(Mockito.any());
+    }
+
+    @Test
+    public void addNewUserArgumentNotValid() throws Exception {
+
+        String userTempJson = "{\"userName\":@#$@#$\",\"password\":\"P@ssw0rd4\",\"active\":\"123543\",\"createDate\":\"2020-06-16\",\"updateDate\":\"2020-06-17\",\"userDetail\":{\"firstName\":\"john\",\"lastName\":\"cena\",\"mobileNumber\":\"9291234567\",\"dateOfBirth\":\"1999-06-18\",\"emailId\":\"john@gmail.com\",\"address\":\"Vastrapur\",\"pincode\":380061},\"userEducationDetail\":{\"sscPercentage\":79.94,\"hscPercentage\":89.13,\"sscBoardName\":\"gseb\",\"hscBoardName\":\"gsheb\",\"cgpa\":7.44,\"universityName\":\"GTU\"},\"userEmploymentDetail\":{\"salary\":200000,\"workEmail\":\"john@neosoft.com\",\"workMobileNumber\":\"1111111111\",\"department\":\"JAVA\",\"dateOfJoin\":\"2020-01-06\",\"experience\":2},\"userProjectDetail\":[{\"projectName\":\"Trade\",\"projectDetail\":\"Trade\",\"projectCompany\":\"XYZ\",\"active\":true,\"startDate\":\"2020-02-10\",\"endDate\":null},{\"projectName\":\"Share\",\"projectDetail\":\"Share\",\"projectCompany\":\"ABC\",\"active\":false,\"startDate\":\"2011-07-23\",\"endDate\":\"2012-07-23\"}],\"userRole\":{\"role\":\"Developer\"}}";
+
+        doThrow(InputMismatchException.class).when(userService).addUser(any());
+
+        mockMvc.perform(MockMvcRequestBuilders.post(url)
+                .content(userTempJson)
+                .characterEncoding("utf-8")
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(MockMvcResultMatchers.status().isBadRequest())
+                .andDo(MockMvcResultHandlers.print());
+
+        verify(userService,times(0)).addUser(Mockito.any());
+    }
+
+    @Test
+    public void addNewUserConstraintViolation() throws Exception {
+
+        String userTempJson = "{\"userName\":\"john\",\"password\":\"P@ssw0rd4\",\"active\":true,\"createDate\":\"2020-06-16\",\"updateDate\":\"2020-06-17\",\"userDetail\":{\"firstName\":\"john\",\"lastName\":\"cena\",\"mobileNumber\":\"9291234567\",\"dateOfBirth\":\"1999-06-18\",\"emailId\":\"john@gmail.com\",\"address\":\"Vastrapur\",\"pincode\":\"hello\"},\"userEducationDetail\":{\"sscPercentage\":79.94,\"hscPercentage\":89.13,\"sscBoardName\":\"gseb\",\"hscBoardName\":\"gsheb\",\"cgpa\":7.44,\"universityName\":\"GTU\"},\"userEmploymentDetail\":{\"salary\":200000,\"workEmail\":\"john@neosoft.com\",\"workMobileNumber\":\"1111111111\",\"department\":\"JAVA\",\"dateOfJoin\":\"2020-01-06\",\"experience\":2},\"userProjectDetail\":[{\"projectName\":\"Trade\",\"projectDetail\":\"Trade\",\"projectCompany\":\"XYZ\",\"active\":true,\"startDate\":\"2020-02-10\",\"endDate\":null},{\"projectName\":\"Share\",\"projectDetail\":\"Share\",\"projectCompany\":\"ABC\",\"active\":false,\"startDate\":\"2011-07-23\",\"endDate\":\"2012-07-23\"}],\"userRole\":{\"role\":\"Developer\"}}";
+
+        doThrow(InputMismatchException.class).when(userService).addUser(any());
+
+        mockMvc.perform(MockMvcRequestBuilders.post(url)
+                .content(userTempJson)
+                .characterEncoding("utf-8")
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(MockMvcResultMatchers.status().isBadRequest())
+                .andDo(MockMvcResultHandlers.print());
+
+        verify(userService,times(0)).addUser(Mockito.any());
     }
 
     @Test

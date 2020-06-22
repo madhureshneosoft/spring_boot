@@ -38,38 +38,11 @@ public class UserController {
         return userService.selectAllActiveUsers();
     }
 
-    /*
-      Dynamic search method
-      @param anything string
-     * @return list of user
-
-    //    @GetMapping("/dynamic/{anything}")
-//    public Set<User> getUser(@PathVariable("anything")String anything){
-//        Set<User> userList = new HashSet<>();
-//        if(anything.matches(PINCODE_REGEXP.getRegExp())){
-//            userList.addAll(userService.selectAllUsersByPincode(Integer.parseInt(anything)));
-//        } else if(anything.matches(EMAIL_REGEXP.getRegExp())){
-//            userList.add(userService.selectByEmailId(anything));
-//        } else if(anything.matches(MOBILE_REGEXP.getRegExp())){
-//            userList.add(userService.selectByMobileNumber(anything));
-//        } else if(anything.matches(DATE_REGEXP.getRegExp())){
-//            userList.addAll(userService.selectAllUsersByBirthDate(anything));
-//            userList.addAll(userService.selectAllUsersByJoinDate(anything));
-//        } else if(anything.matches("(\\d)+")){
-//            userList.add(userService.selectUser(Integer.parseInt(anything)));
-//        } else {
-//            userList.addAll(userService.selectAllUsersByFirstName(anything));
-//            userList.addAll(userService.selectAllUsersByLastName(anything));
-//        }
-//        return userList;
-//    }/*
-
     /**
      * Dynamic search new
      * @param string anything
      * @return list of user
      */
-
     @GetMapping("/getUser/{string}")
     public Set<User> dynamic(@PathVariable("string")String string){
         return new HashSet<>(userService.dynamicSearch(string));
