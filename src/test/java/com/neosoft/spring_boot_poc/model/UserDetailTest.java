@@ -5,26 +5,70 @@
 //import org.mockito.Mock;
 //
 //import java.sql.Date;
+//import java.util.Arrays;
 //
 //import static org.assertj.core.api.Assertions.assertThat;
 //
 //public class UserDetailTest {
 //
 //    @Mock
-//    UserDetail user1;
+//    User user1;
 //
 //    @Before
 //    public void setUp(){
-//        user1 = new UserDetail(1,
-//                "test1",
-//                "test1",
-//                "9978607891",
-//                Date.valueOf("1997-12-31"),
-//                Date.valueOf("2020-03-15"),
-//                "test1@gmail.com",
-//                "address 1",
+//        user1 = new User(1,
+//                "john",
+//                "P@ssw0rd",
 //                true,
-//                380015);
+//                Date.valueOf("2020-01-07"),
+//                Date.valueOf("2020-01-07"),
+//                new UserDetail(1,
+//                        null,
+//                        "john",
+//                        "cena",
+//                        "9978607891",
+//                        Date.valueOf("1998-09-19"),
+//                        "john@gmail.com",
+//                        "test address",
+//                        380061),
+//                new UserEducationDetail(1,
+//                        null,
+//                        86.32f,
+//                        81.83f,
+//                        "gseb",
+//                        "gsheb",
+//                        8.96f,
+//                        "GTU"),
+//                new UserEmploymentDetail(1,
+//                        null,
+//                        25000,
+//                        "john@gmail.com",
+//                        "9999999999",
+//                        "Java",
+//                        Date.valueOf("2020-01-07"),
+//                        Byte.valueOf("3")),
+//                Arrays.asList(new UserProjectDetail(1,
+//                                null,
+//                                "goods",
+//                                "goods and services",
+//                                "DHL",
+//                                true,
+//                                Date.valueOf("2020-03-15"),
+//                                null),
+//                        new UserProjectDetail(2,
+//                                null,
+//                                "goods",
+//                                "goods and services",
+//                                "DHL",
+//                                true,
+//                                Date.valueOf("2020-03-15"),
+//                                null)),
+//                new UserRole(1, "Developer", null));
+//        user1.getUserEmploymentDetail().setUser(user1);
+//        user1.getUserEducationDetail().setUser(user1);
+//        user1.getUserRole().setUser(user1);
+//        user1.getUserDetail().setUser(user1);
+//        user1.getUserProjectDetail().forEach(userProjectDetail -> userProjectDetail.setUser(user1));
 //    }
 //
 //    @Test
@@ -62,8 +106,8 @@
 //
 //    @Test
 //    public void noArgConstructorTest(){
-//        UserDetail newUser = new UserDetail(0,null,null,null,null,null,null,null,false,0);
-//        UserDetail anotherNewUser = new UserDetail();
+//        User newUser = new User();
+//        User anotherNewUser = new User();
 //        assertThat(anotherNewUser).isEqualTo(newUser);
 //        assertThat(anotherNewUser.hashCode()).isEqualTo(newUser.hashCode());
 //    }

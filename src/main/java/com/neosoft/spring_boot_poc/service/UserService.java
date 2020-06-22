@@ -35,55 +35,6 @@ public interface UserService {
     List<User> selectAllUserSortBy(String field);
 
     /**
-     * Find Users based on pincode
-     * @param pincode string
-     * @return List of users
-     */
-    List<User> selectAllUsersByPincode(int pincode);
-
-    /**
-     * Find users based on first name
-     * @param firstName string
-     * @return list of users
-     */
-    List<User> selectAllUsersByFirstName(String firstName);
-
-    /**
-     * Find users based on last name
-     * @param lastName string
-     * @return list of users
-     */
-    List<User> selectAllUsersByLastName(String lastName);
-
-    /**
-     * find users based on birth date
-     * @param birthDate string
-     * @return  list of users
-     */
-    List<User> selectAllUsersByBirthDate(String birthDate);
-
-    /**
-     * find users based on join date
-     * @param joinDate string
-     * @return list of users
-     */
-    List<User> selectAllUsersByJoinDate(String joinDate);
-
-    /**
-     * find user based on email id
-     * @param emailId string
-     * @return user
-     */
-    User selectByEmailId(String emailId);
-
-    /**
-     * find user based on mobile number
-     * @param mobileNumber string
-     * @return user
-     */
-    User selectByMobileNumber(String mobileNumber);
-
-    /**
      * Method to edit user
      * @param user object
      * @param id int

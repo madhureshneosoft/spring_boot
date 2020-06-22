@@ -11,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.Date;
 import java.util.ArrayList;
+import java.util.InputMismatchException;
 import java.util.List;
 import java.util.Optional;
 
@@ -27,15 +28,18 @@ public class UserServiceImpl implements UserService {
         this.userRepoImpl = userRepoImpl;
     }
 
-
     @Override
     public User addUser(User user) {
-        user.getUserDetail().setUser(user);
-        user.getUserEducationDetail().setUser(user);
-        user.getUserEmploymentDetail().setUser(user);
-        user.getUserProjectDetail().forEach(userProjectDetail -> userProjectDetail.setUser(user));
-        user.getUserRole().setUser(user);
-        return userRepo.save(user);
+        if(user.getUserDetail().getDateOfBirth().compareTo(user.getUserEmploymentDetail().getDateOfJoin())>0){
+            throw new InputMismatchException("not possible");
+        } else {
+            user.getUserDetail().setUser(user);
+            user.getUserEducationDetail().setUser(user);
+            user.getUserEmploymentDetail().setUser(user);
+            user.getUserProjectDetail().forEach(userProjectDetail -> userProjectDetail.setUser(user));
+            user.getUserRole().setUser(user);
+            return userRepo.save(user);
+        }
     }
 
     @Override
@@ -51,41 +55,6 @@ public class UserServiceImpl implements UserService {
     @Override
     public List<User> selectAllUserSortBy(String field) {
         return userRepo.findAll(Sort.by(field).ascending());
-    }
-
-    @Override
-    public List<User> selectAllUsersByPincode(int pincode) {
-        return userRepo.findAllByUserDetailPincodeAndActiveTrue(pincode);
-    }
-
-    @Override
-    public List<User> selectAllUsersByFirstName(String firstName) {
-        return userRepo.findAllByUserDetailFirstNameAndActiveTrue(firstName);
-    }
-
-    @Override
-    public List<User> selectAllUsersByLastName(String lastName) {
-        return userRepo.findAllByUserDetailLastNameAndActiveTrue(lastName);
-    }
-
-    @Override
-    public List<User> selectAllUsersByBirthDate(String birthDate) {
-        return userRepo.findAllByUserDetailDateOfBirthAndActiveTrue(Date.valueOf(birthDate));
-    }
-
-    @Override
-    public List<User> selectAllUsersByJoinDate(String joinDate) {
-        return userRepo.findAllByUserEmploymentDetailDateOfJoinAndActiveTrue(Date.valueOf(joinDate));
-    }
-
-    @Override
-    public User selectByEmailId(String emailId) {
-        return userRepo.findByUserDetailEmailIdAndActiveTrue(emailId);
-    }
-
-    @Override
-    public User selectByMobileNumber(String mobileNumber) {
-        return userRepo.findByUserDetailMobileNumberAndActiveTrue(mobileNumber);
     }
 
     /**
@@ -162,12 +131,4 @@ public class UserServiceImpl implements UserService {
         System.out.println(query.toString());
         return new ArrayList<>(userRepoImpl.dynamicSearch(query.toString()));
     }
-
-    /*    @Override
-    public List<User> selectAllUsers() {
-       return userRepo.findAll();
-    }/*
-//
-
-     */
 }
