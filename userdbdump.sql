@@ -35,12 +35,15 @@ CREATE TABLE `user_detail_tbl` (
   UNIQUE KEY `UK_r8l4ckesqa0a3pfs0lieeu6gt` (`mobile_number`),
   KEY `FKbi4fs914pes9smgxyrvjetk8v` (`user_id`),
   CONSTRAINT `FKbi4fs914pes9smgxyrvjetk8v` FOREIGN KEY (`user_id`) REFERENCES `user_tbl` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 /*Data for the table `user_detail_tbl` */
 
 insert  into `user_detail_tbl`(`id`,`address`,`date_of_birth`,`email_id`,`first_name`,`last_name`,`mobile_number`,`pincode`,`user_id`) values 
-(1,'test3 address','1998-09-19','test31.newtest@gmail.com','test3fnewupdated','test3lnnewasd','9978607890',380061,1);
+(1,'Vastrapur','1998-09-19','john@gmail.com','john','cena','9978607890',380061,1),
+(2,'Ghatlodia','1996-01-29','smith@gmail.com','smith','will','9978607850',380015,2),
+(3,'Prahladnagar','1993-05-11','jack@gmail.com','jack','chan','9378607850',380063,3),
+(4,'Shahibaug','1995-11-21','corey@gmail.com','corey','barlog','9378607851',380061,4);
 
 /*Table structure for table `user_education_tbl` */
 
@@ -58,13 +61,15 @@ CREATE TABLE `user_education_tbl` (
   PRIMARY KEY (`id`),
   KEY `FK5dn13h2pnlsgfgpgkny7ks40r` (`user_id`),
   CONSTRAINT `FK5dn13h2pnlsgfgpgkny7ks40r` FOREIGN KEY (`user_id`) REFERENCES `user_tbl` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 /*Data for the table `user_education_tbl` */
 
 insert  into `user_education_tbl`(`id`,`cgpa`,`hsc_board_name`,`hsc_percentage`,`ssc_board_name`,`ssc_percentage`,`university_name`,`user_id`) values 
-(1,8.44,'gsheb',89.13,'gseb',79.14,'GTU',1),
-(3,8.44,'gsheb',84.13,'gseb',72.14,'GTU',1);
+(1,7.44,'gsheb',89.13,'gseb',79.94,'GTU',1),
+(2,8.48,'gsheb',86.23,'icsc',71.62,'DDU',2),
+(3,8.24,'gsheb',84.81,'gseb',84.77,'GTU',3),
+(4,9.41,'gsheb',80.03,'gseb',89.91,'IIT',4);
 
 /*Table structure for table `user_employment_tbl` */
 
@@ -84,12 +89,15 @@ CREATE TABLE `user_employment_tbl` (
   UNIQUE KEY `UK_i5txoyr7cdt0v4l0fnifbkpm` (`work_mobile_number`),
   KEY `FK76exlc85cyqex6g2tymaglgtc` (`user_id`),
   CONSTRAINT `FK76exlc85cyqex6g2tymaglgtc` FOREIGN KEY (`user_id`) REFERENCES `user_tbl` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 /*Data for the table `user_employment_tbl` */
 
 insert  into `user_employment_tbl`(`id`,`date_of_join`,`department`,`experience`,`salary`,`work_email`,`work_mobile_number`,`user_id`) values 
-(1,'2020-01-07','JAVA',2,200000,'update@neosoft.com','1111111111',1);
+(1,'2020-01-07','JAVA',2,200000,'john@neosoft.com','1111111111',1),
+(2,'2020-01-07','PHP',2,220000,'smith@neosoft.com','1111111151',2),
+(3,'2020-01-07','JAVA',2,250000,'jack@neosoft.com','1111311151',3),
+(4,'2020-01-07','DOT NET',2,270000,'corey@neosoft.com','1219311151',4);
 
 /*Table structure for table `user_project_tbl` */
 
@@ -107,12 +115,19 @@ CREATE TABLE `user_project_tbl` (
   PRIMARY KEY (`id`),
   KEY `FK36rhsef1tioec0bcf8cotoeac` (`user_id`),
   CONSTRAINT `FK36rhsef1tioec0bcf8cotoeac` FOREIGN KEY (`user_id`) REFERENCES `user_tbl` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 /*Data for the table `user_project_tbl` */
 
 insert  into `user_project_tbl`(`id`,`active`,`end_date`,`project_company`,`project_detail`,`project_name`,`start_date`,`user_id`) values 
-(1,'',NULL,'E NEW COMMUNICATE','SMS NEW PROJECT FOR BRAZIL','SMS NEW','2020-03-13',1);
+(1,'',NULL,'XYZ','Trade','Trade','2020-02-10',1),
+(2,'\0','2012-07-23','ABC','Share','Share','2011-07-23',1),
+(3,'',NULL,'XYZ','Sms','Sms','2019-09-01',2),
+(4,'\0','2016-01-25','ABC','Portal','Portal','2013-01-25',2),
+(5,'',NULL,'XYZ','Shopping','Shopping','2020-03-13',3),
+(6,'\0','2017-11-17','ABC','Inevntory','Inevntory','2017-10-17',3),
+(7,'',NULL,'XYZ','Messaging service','Messaging service','2020-02-11',4),
+(8,'\0','2019-09-29','ABC','Website','Website','2019-08-29',4);
 
 /*Table structure for table `user_role_tbl` */
 
@@ -125,12 +140,15 @@ CREATE TABLE `user_role_tbl` (
   PRIMARY KEY (`id`),
   KEY `FK53b8oon0dkfbdetl5bsqfq0wn` (`user_id`),
   CONSTRAINT `FK53b8oon0dkfbdetl5bsqfq0wn` FOREIGN KEY (`user_id`) REFERENCES `user_tbl` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 /*Data for the table `user_role_tbl` */
 
 insert  into `user_role_tbl`(`id`,`role`,`user_id`) values 
-(1,'Developer',1);
+(1,'Developer',1),
+(2,'Tester',2),
+(3,'Admin',3),
+(4,'Developer',4);
 
 /*Table structure for table `user_tbl` */
 
@@ -157,12 +175,15 @@ CREATE TABLE `user_tbl` (
   CONSTRAINT `FK8ofdrag8cnk8nal9uhf4wcy7h` FOREIGN KEY (`user_education_detail_id`) REFERENCES `user_education_tbl` (`id`),
   CONSTRAINT `FKedndhw56jym8979av093psf4i` FOREIGN KEY (`user_detail_id`) REFERENCES `user_detail_tbl` (`id`),
   CONSTRAINT `FKp5dq346y4agmfw1e8mo0ix3bv` FOREIGN KEY (`user_employment_detail_id`) REFERENCES `user_employment_tbl` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 /*Data for the table `user_tbl` */
 
 insert  into `user_tbl`(`id`,`active`,`create_date`,`password`,`update_date`,`user_name`,`user_detail_id`,`user_education_detail_id`,`user_employment_detail_id`,`user_role_id`) values 
-(1,'','2020-06-17','P@ssw0rd','2020-06-18','updatemethod',1,1,1,1);
+(1,'','2020-06-17','P@ssw0rd4','2020-06-18','john',1,1,1,1),
+(2,'','2020-06-17','P@ssw0rd3','2020-06-18','smith',2,2,2,2),
+(3,'\0','2020-06-17','P@ssw0rd2','2020-06-18','jack',3,3,3,3),
+(4,'','2020-06-17','P@ssw0rd1','2020-06-18','corey',4,4,4,4);
 
 /*Table structure for table `user_tbl_user_project_detail` */
 
@@ -180,7 +201,14 @@ CREATE TABLE `user_tbl_user_project_detail` (
 /*Data for the table `user_tbl_user_project_detail` */
 
 insert  into `user_tbl_user_project_detail`(`user_tbl_id`,`user_project_detail_id`) values 
-(1,1);
+(1,1),
+(1,2),
+(2,3),
+(2,4),
+(3,5),
+(3,6),
+(4,7),
+(4,8);
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
 /*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
