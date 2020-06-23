@@ -42,6 +42,9 @@ public class UserControllerTest {
     @MockBean
     UserServiceImpl userService;
 
+    @MockBean
+    Validation validation;
+
     UserController userController;
 
     User user1;
@@ -66,7 +69,7 @@ public class UserControllerTest {
 
     @Before
     public void setup() throws JsonProcessingException {
-        userController = new UserController(userService);
+        userController = new UserController(userService,validation);
 
         user1 = new User(1,
                 "john",

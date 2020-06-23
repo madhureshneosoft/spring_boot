@@ -6,4 +6,6 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface UserDetailRepo extends JpaRepository<UserDetail,Integer> {
+    boolean existsByEmailId(String emailId);
+    boolean existsByMobileNumber(String mobileNumber);
 }

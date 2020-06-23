@@ -6,4 +6,6 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface UserEmploymentDetailRepo extends JpaRepository<UserEmploymentDetail,Integer> {
+    boolean existsByWorkEmail(String workEmailId);
+    boolean existsByWorkMobileNumber(String emailId);
 }

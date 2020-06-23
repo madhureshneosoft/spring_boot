@@ -44,11 +44,6 @@ public class UserDetail {
     @JsonFormat(pattern = "yyyy-MM-dd", timezone = "Europe/Madrid")
     private Date dateOfBirth;
 
-//    @Column
-//    @NotNull
-//    @JsonFormat(pattern = "yyyy-MM-dd", timezone = "Europe/Madrid")
-//    private Date dateOfJoin;  //format : dd-mm-yyyy
-
     @Column(unique = true)
     @NotNull
     @Pattern(regexp = "^([A-Za-z0-9])(([.])?[0-9a-z])*[@]([a-z])+([.]([a-z])+){1,3}",message = "Invalid Email-Id")

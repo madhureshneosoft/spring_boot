@@ -3,9 +3,11 @@ package com.neosoft.spring_boot_poc.controller;
 import com.neosoft.spring_boot_poc.model.User;
 import com.neosoft.spring_boot_poc.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.*;
 
 @RequestMapping("/api/user")
@@ -13,10 +15,12 @@ import java.util.*;
 public class UserController {
 
     private final UserService userService;
+    private final Validation validation;
 
     @Autowired
-    public UserController(UserService userService) {
+    public UserController(UserService userService, Validation validation) {
         this.userService = userService;
+        this.validation = validation;
     }
 
     /**
@@ -25,8 +29,13 @@ public class UserController {
      * @return added user
      */
     @PostMapping()
-    public User addUser(@Valid @RequestBody User user){
+    public User addUser(@Valid @RequestBody User user) {
         return userService.addUser(user);
+    }
+
+    @PostMapping("/trial")
+    public ResponseEntity<Object> addUserNew(@Valid @RequestBody User user) {
+        return validation.addUser(user);
     }
 
     /**
