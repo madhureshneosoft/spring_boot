@@ -1,12 +1,14 @@
 package com.neosoft.spring_boot_poc.exception;
 
 import lombok.Getter;
+import lombok.ToString;
 import org.springframework.http.HttpStatus;
 
 import java.util.List;
 
 @Getter
-public class ApiError {
+@ToString
+public class ApiError extends RuntimeException{
 
     private final HttpStatus status;
     private final String message;

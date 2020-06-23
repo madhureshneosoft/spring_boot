@@ -31,6 +31,11 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public boolean checkForDuplicate(String userName) {
+        return userRepo.existsByUserName(userName);
+    }
+
+    @Override
     public User addUser(User user) {
         user.getUserDetail().setUser(user);
         user.getUserEducationDetail().setUser(user);

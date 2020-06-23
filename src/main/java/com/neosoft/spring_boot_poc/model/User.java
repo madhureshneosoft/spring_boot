@@ -27,7 +27,7 @@ public class User {
     private String userName;
 
     @NotNull
-    @Pattern(regexp = "^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$",message = "invalid password")
+    @Pattern(regexp = "^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,36}$",message = "invalid password")
     private String password;
 
     @NotNull

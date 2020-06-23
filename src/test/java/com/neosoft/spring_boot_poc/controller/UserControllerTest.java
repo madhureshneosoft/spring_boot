@@ -5,6 +5,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.neosoft.spring_boot_poc.model.*;
+import com.neosoft.spring_boot_poc.service.UserDetailService;
+import com.neosoft.spring_boot_poc.service.UserEmploymentDetailService;
 import com.neosoft.spring_boot_poc.service.UserServiceImpl;
 import org.apache.coyote.Response;
 import org.junit.Before;
@@ -43,7 +45,10 @@ public class UserControllerTest {
     UserServiceImpl userService;
 
     @MockBean
-    Validation validation;
+    UserDetailService userDetailService;
+
+    @MockBean
+    UserEmploymentDetailService userEmploymentDetailService;
 
     UserController userController;
 
@@ -69,7 +74,7 @@ public class UserControllerTest {
 
     @Before
     public void setup() throws JsonProcessingException {
-        userController = new UserController(userService,validation);
+        userController = new UserController(userService,userDetailService,userEmploymentDetailService);
 
         user1 = new User(1,
                 "john",

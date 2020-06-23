@@ -1,26 +1,27 @@
 package com.neosoft.spring_boot_poc.controller;
 
+import com.neosoft.spring_boot_poc.exception.ApiError;
 import com.neosoft.spring_boot_poc.model.User;
+import com.neosoft.spring_boot_poc.service.UserDetailService;
+import com.neosoft.spring_boot_poc.service.UserEmploymentDetailService;
 import com.neosoft.spring_boot_poc.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.*;
 
 @RequestMapping("/api/user")
 @RestController
-public class UserController {
+public class UserController extends Validation {
 
     private final UserService userService;
-    private final Validation validation;
 
     @Autowired
-    public UserController(UserService userService, Validation validation) {
+    public UserController(UserService userService, UserDetailService userDetailService, UserEmploymentDetailService userEmploymentDetailService) {
+        super(userDetailService, userService,userEmploymentDetailService);
         this.userService = userService;
-        this.validation = validation;
     }
 
     /**
@@ -29,13 +30,16 @@ public class UserController {
      * @return added user
      */
     @PostMapping()
-    public User addUser(@Valid @RequestBody User user) {
-        return userService.addUser(user);
-    }
-
-    @PostMapping("/trial")
-    public ResponseEntity<Object> addUserNew(@Valid @RequestBody User user) {
-        return validation.addUser(user);
+    public ResponseEntity<Object> addUser(@Valid @RequestBody User user) throws ApiError {
+        ResponseEntity<Object> responseEntity = null;
+        try {
+            if (valid(user)) {
+               responseEntity = responseBuilder(userService.addUser(user));
+            }
+        } catch (ApiError e) {
+            responseEntity = responseBuilder(e);
+        }
+        return responseEntity;
     }
 
     /**

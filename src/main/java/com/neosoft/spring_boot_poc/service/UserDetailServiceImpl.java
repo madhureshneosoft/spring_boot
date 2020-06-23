@@ -16,6 +16,6 @@ public class UserDetailServiceImpl implements UserDetailService {
 
     @Override
     public boolean checkForDuplicate(String emailId,String mobileNumber) {
-        return userDetailRepo.existsByEmailId(emailId) & userDetailRepo.existsByMobileNumber(mobileNumber);
+        return userDetailRepo.existsByEmailId(emailId) && userDetailRepo.existsByMobileNumber(mobileNumber);
     }
 }

@@ -30,6 +30,8 @@ public interface UserRepo extends JpaRepository<User,Integer> {
      */
     List<User> findAllByActiveFalse();
 
+    boolean existsByUserName(String userName);
+
     /**
      * Finds all active users in database using first name
      * @return all users for given name

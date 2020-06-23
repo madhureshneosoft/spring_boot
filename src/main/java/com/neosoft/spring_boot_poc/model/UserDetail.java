@@ -26,12 +26,12 @@ public class UserDetail {
 
     @Column
     @NotNull
-    @Size(min = 2, message = "First Name too short (at least 2 characters required)")
+    @Pattern(regexp = "([a-zA-Z]){2,16}")
     private String firstName;
 
     @Column
     @NotNull
-    @Size(min = 2, message = "Last Name too short (at least 2 characters required)")
+    @Pattern(regexp = "([a-zA-Z]){2,16}")
     private String lastName;
 
     @Column(unique = true)

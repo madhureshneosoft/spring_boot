@@ -15,6 +15,8 @@ public interface UserService {
      */
     User addUser(User user);
 
+    boolean checkForDuplicate(String userName);
+
     /**
      * Method to select all active user
      * @return list of all active user
