@@ -7,6 +7,7 @@ import lombok.*;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
 import java.sql.Date;
 
 @Entity (name = "user_employment_tbl")
@@ -30,10 +31,12 @@ public class UserEmploymentDetail {
 
     @Column(unique = true)
     @NotNull
+    @Pattern(regexp = "^([A-Za-z0-9])(([.])?[0-9a-z])*[@]([a-z])+([.]([a-z])+){1,3}",message = "Invalid Email-Id")
     private String workEmail;
 
     @Column(unique = true)
     @NotNull
+    @Pattern(regexp = "^[789](\\d){9}",message = "Invalid mobile number")
     private String workMobileNumber;
 
     @NotNull

@@ -1,8 +1,10 @@
 package com.neosoft.spring_boot_poc.service;
 
 import com.neosoft.spring_boot_poc.model.User;
+import com.neosoft.spring_boot_poc.model.response.UserResponse;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
 import java.util.List;
 
 @Service
@@ -18,6 +20,8 @@ public interface UserService {
     boolean checkForDuplicate(String userName);
 
     boolean userExists(int id);
+
+    int editUserNew(HashMap<String,Object> map, int id);
 
     /**
      * Method to select all active user

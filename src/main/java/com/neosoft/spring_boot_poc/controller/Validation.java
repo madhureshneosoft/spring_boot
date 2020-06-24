@@ -50,7 +50,7 @@ public abstract class Validation {
             errors.add("Birth date cannot be less than join date");
         }
         if (duplicateValidator(user)) {
-            errors.add("Duplicate value found");
+            errors.add("Duplicate Email and/or Mobile Number Found");
         }
         if (!emailValidator(user)) {
             errors.add("Invalid Email");

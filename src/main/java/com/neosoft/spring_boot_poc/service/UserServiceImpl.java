@@ -4,6 +4,7 @@ import com.neosoft.spring_boot_poc.exception.ApiError;
 import com.neosoft.spring_boot_poc.exception.NoUserFoundException;
 import com.neosoft.spring_boot_poc.model.User;
 import com.neosoft.spring_boot_poc.model.UserProjectDetail;
+import com.neosoft.spring_boot_poc.model.response.UserResponse;
 import com.neosoft.spring_boot_poc.repo.UserRepo;
 import com.neosoft.spring_boot_poc.repo.UserRepoImpl;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,6 +49,32 @@ public class UserServiceImpl implements UserService {
     @Override
     public boolean userExists(int id) {
         return userRepo.existsById(id);
+    }
+
+    @Override
+    public int editUserNew(HashMap<String, Object> map, int id) {
+        StringBuilder query = new StringBuilder("UPDATE user_tbl u set ");
+        int i = 0;
+        Set<Map.Entry<String, Object>> entrySet = map.entrySet();
+        for(Map.Entry<String, Object> set : entrySet){
+            if(i==0) {
+                if(set.getValue() instanceof String) {
+                    query.append("u.").append(set.getKey()).append("=").append("'").append(set.getValue()).append("'");
+                } else {
+                    query.append("u.").append(set.getKey()).append("=").append(set.getValue());
+                }
+                i++;
+            } else {
+                if(set.getValue() instanceof String) {
+                    query.append(", ").append("u.").append(set.getKey()).append("=").append("'").append(set.getValue()).append("'");
+                } else {
+                    query.append(", ").append("u.").append(set.getKey()).append("=").append(set.getValue());
+                }
+            }
+        }
+        query.append(" where u.id=").append(id);
+        System.out.println(query.toString());
+        return userRepoImpl.patchUpdate(query.toString());
     }
 
     @Override

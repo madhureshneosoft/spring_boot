@@ -2,6 +2,7 @@ package com.neosoft.spring_boot_poc.controller;
 
 import com.neosoft.spring_boot_poc.exception.ApiError;
 import com.neosoft.spring_boot_poc.model.User;
+import com.neosoft.spring_boot_poc.model.response.UserResponse;
 import com.neosoft.spring_boot_poc.service.UserDetailService;
 import com.neosoft.spring_boot_poc.service.UserEmploymentDetailService;
 import com.neosoft.spring_boot_poc.service.UserService;
@@ -98,6 +99,12 @@ public class UserController extends Validation {
     @PutMapping("/{userId}")
     public User editUser(@PathVariable("userId") int id, @RequestBody User user) {
         return userService.editUser(user, id);
+    }
+
+    @PutMapping("/newUpdate/{userId}")
+    public User updateUser(@PathVariable("userId") int id, @RequestBody HashMap<String,Object> map) {
+        userService.editUserNew(map,id);
+        return null;
     }
 
     /**

@@ -5,9 +5,11 @@ import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.CriteriaUpdate;
 import javax.persistence.criteria.Root;
 import java.util.List;
 
@@ -26,5 +28,15 @@ public class UserRepoImpl {
 
         TypedQuery<User> query = entityManager.createQuery(queryString,User.class);
         return query.getResultList();
+    }
+
+    public int patchUpdate(String queryString) {
+        CriteriaBuilder cb = entityManager.getCriteriaBuilder();
+
+        CriteriaUpdate<User> criteriaQuery = cb.createCriteriaUpdate(User.class);
+        Root<User> c = criteriaQuery.from(User.class);
+
+        Query query = entityManager.createQuery(queryString);
+        return query.executeUpdate();
     }
 }
