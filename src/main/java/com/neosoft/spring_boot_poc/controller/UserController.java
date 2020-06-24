@@ -2,10 +2,12 @@ package com.neosoft.spring_boot_poc.controller;
 
 import com.neosoft.spring_boot_poc.exception.ApiError;
 import com.neosoft.spring_boot_poc.model.User;
+import com.neosoft.spring_boot_poc.model.request.UserRequest;
 import com.neosoft.spring_boot_poc.model.response.UserResponse;
 import com.neosoft.spring_boot_poc.service.UserDetailService;
 import com.neosoft.spring_boot_poc.service.UserEmploymentDetailService;
 import com.neosoft.spring_boot_poc.service.UserService;
+import com.neosoft.spring_boot_poc.util.Factory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -35,11 +37,11 @@ public class UserController extends Validation {
      * @return added user
      */
     @PostMapping()
-    public ResponseEntity<Object> addUser(@Valid @RequestBody User user) throws ApiError {
+    public ResponseEntity<Object> addUser(@RequestBody UserRequest user) throws ApiError {
         ResponseEntity<Object> responseEntity = null;
         try {
             if (valid(user)) {
-                responseEntity = responseBuilder(userService.addUser(user));
+                responseEntity = responseBuilder(userService.addUser(Factory.userRequestToUser(user)));
             }
         } catch (ApiError e) {
             responseEntity = responseBuilder(e);

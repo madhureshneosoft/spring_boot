@@ -3,6 +3,7 @@ package com.neosoft.spring_boot_poc.controller;
 import com.google.gson.Gson;
 import com.neosoft.spring_boot_poc.exception.ApiError;
 import com.neosoft.spring_boot_poc.model.User;
+import com.neosoft.spring_boot_poc.model.request.UserRequest;
 import com.neosoft.spring_boot_poc.service.UserDetailService;
 import com.neosoft.spring_boot_poc.service.UserEmploymentDetailService;
 import com.neosoft.spring_boot_poc.service.UserService;
@@ -12,7 +13,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 
-import java.sql.Date;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -25,30 +25,23 @@ public abstract class Validation {
 
     private final UserDetailService userDetailService;
     private final UserService userService;
-    private final UserEmploymentDetailService userEmploymentDetailService;
     private final Gson gson;
 
     @Autowired
     public Validation(UserDetailService userDetailService, UserService userService, UserEmploymentDetailService userEmploymentDetailService) {
         this.userDetailService = userDetailService;
         this.userService = userService;
-        this.userEmploymentDetailService = userEmploymentDetailService;
         gson = new Gson();
     }
 
-    public boolean valid(int userId) throws ApiError {
-        if(userService.userExists(userId)){
-            return true;
-        } else {
+    public void valid(int userId) throws ApiError {
+        if (!userService.userExists(userId)) {
             throw new ApiError(HttpStatus.NO_CONTENT,"Invalid UserId",null);
         }
     }
 
-    public boolean valid(User user) throws ApiError {
+    public boolean valid(UserRequest user) throws ApiError {
         List<String> errors = new ArrayList<>();
-        if (!birthDateJoinDateValidator(user)) {
-            errors.add("Birth date cannot be less than join date");
-        }
         if (duplicateValidator(user)) {
             errors.add("Duplicate Email and/or Mobile Number Found");
         }
@@ -102,63 +95,54 @@ public abstract class Validation {
         }
     }
 
-    public boolean birthDateJoinDateValidator(User user) {
-        return user.getUserDetail().getDateOfBirth().compareTo(user.getUserEmploymentDetail().getDateOfJoin()) <= 0;
-    }
-
-    public boolean duplicateValidator(User user) {
+    public boolean duplicateValidator(UserRequest user) {
         return userDetailService.checkForDuplicate(user.getUserDetail().getEmailId(), user.getUserDetail().getMobileNumber())
-                && userEmploymentDetailService.checkForDuplicate(user.getUserEmploymentDetail().getWorkEmail(),
-                user.getUserEmploymentDetail().getWorkMobileNumber())
                 && userService.checkForDuplicate(user.getUserName());
     }
 
-    public boolean emailValidator(User user) {
-        return user.getUserDetail().getEmailId().matches(EMAIL_REGEXP.getRegExp())
-                && user.getUserEmploymentDetail().getWorkEmail().matches(EMAIL_REGEXP.getRegExp());
+    public boolean emailValidator(UserRequest user) {
+        return user.getUserDetail().getEmailId().matches(EMAIL_REGEXP.getRegExp());
     }
 
-    public boolean mobileNumberValidator(User user) {
-        return user.getUserDetail().getMobileNumber().matches(MOBILE_REGEXP.getRegExp())
-                && user.getUserEmploymentDetail().getWorkMobileNumber().matches(MOBILE_REGEXP.getRegExp());
+    public boolean mobileNumberValidator(UserRequest user) {
+        return user.getUserDetail().getMobileNumber().matches(MOBILE_REGEXP.getRegExp());
     }
 
-    public boolean passwordValidator(User user) {
+    public boolean passwordValidator(UserRequest user) {
         return user.getPassword().matches(PASSWORD_REGEXP.getRegExp());
     }
 
-    public boolean userNameValidator(User user) {
+    public boolean userNameValidator(UserRequest user) {
         return user.getUserName().matches(USERNAME_REGEXP.getRegExp());
     }
 
-    public boolean firstNameLastNameValidator(User user) {
+    public boolean firstNameLastNameValidator(UserRequest user) {
         return user.getUserDetail().getFirstName().matches(NAME_REGEXP.getRegExp())
                 && user.getUserDetail().getLastName().matches(NAME_REGEXP.getRegExp());
     }
 
-    public boolean pincodeValidator(User user) {
+    public boolean pincodeValidator(UserRequest user) {
         return String.valueOf(user.getUserDetail().getPincode()).matches(PINCODE_REGEXP.getRegExp());
     }
 
-    public boolean marksValidator(User user) {
+    public boolean marksValidator(UserRequest user) {
         return user.getUserEducationDetail().getSscPercentage() <= 100
                 && user.getUserEducationDetail().getHscPercentage() <= 100
                 && user.getUserEducationDetail().getCgpa() <= 10;
     }
 
-    public boolean projectValidator(User user) {
+    public boolean projectValidator(UserRequest user) {
         return user.getUserProjectDetail().stream().allMatch(userProjectDetail -> (!userProjectDetail.isActive()
                 && userProjectDetail.getEndDate().after(userProjectDetail.getStartDate()))
                 || (userProjectDetail.isActive() && null == userProjectDetail.getEndDate()));
     }
 
-    public boolean dateValidator(User user) {
+    public boolean dateValidator(UserRequest user) {
         boolean flag;
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
         format.setLenient(false);
         try {
             format.parse(user.getUserDetail().getDateOfBirth().toString());
-            format.parse(user.getUserEmploymentDetail().getDateOfJoin().toString());
             flag = user.getUserProjectDetail().stream().allMatch((userProjectDetail -> {
                 try {
                     if (userProjectDetail.isActive()) {
