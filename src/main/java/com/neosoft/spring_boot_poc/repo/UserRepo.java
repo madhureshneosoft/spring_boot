@@ -32,6 +32,8 @@ public interface UserRepo extends JpaRepository<User,Integer> {
 
     boolean existsByUserName(String userName);
 
+    boolean existsById(int id);
+
     /**
      * Finds all active users in database using first name
      * @return all users for given name

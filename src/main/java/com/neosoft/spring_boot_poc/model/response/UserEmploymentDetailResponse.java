@@ -1,10 +1,15 @@
 package com.neosoft.spring_boot_poc.model.response;
 
+import lombok.*;
+
 import java.sql.Date;
 
+@NoArgsConstructor
+@AllArgsConstructor
+@Getter
+@Setter
+@ToString
 public class UserEmploymentDetailResponse {
-
-    private int id;
 
     private String workEmail;
 

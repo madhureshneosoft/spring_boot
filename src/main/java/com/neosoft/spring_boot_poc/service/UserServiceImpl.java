@@ -46,6 +46,11 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public boolean userExists(int id) {
+        return userRepo.existsById(id);
+    }
+
+    @Override
     public List<User> selectAllInactiveUsers() {
         return userRepo.findAllByActiveFalse();
     }
@@ -68,12 +73,7 @@ public class UserServiceImpl implements UserService {
      */
     @Override
     public List<User> selectAllActiveUsers() {
-        List<User> userList = userRepo.findAllByActiveTrue();
-        if (userList.size() != 0) {
-            return userList;
-        } else {
-            throw new NoUserFoundException("No Active User");
-        }
+        return userRepo.findAllByActiveTrue();
     }
 
     /**

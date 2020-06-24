@@ -1,8 +1,13 @@
 package com.neosoft.spring_boot_poc.model.response;
 
-public class UserRoleDetailResponse {
+import lombok.*;
 
-    private int id;
+@NoArgsConstructor
+@AllArgsConstructor
+@Getter
+@Setter
+@ToString
+public class UserRoleDetailResponse {
 
     private String role;
 }

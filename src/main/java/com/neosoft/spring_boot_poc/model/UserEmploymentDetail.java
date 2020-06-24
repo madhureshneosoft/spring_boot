@@ -2,6 +2,7 @@ package com.neosoft.spring_boot_poc.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.OptBoolean;
 import lombok.*;
 
 import javax.persistence.*;
@@ -39,7 +40,7 @@ public class UserEmploymentDetail {
     private String department;
 
     @NotNull
-    @JsonFormat(pattern = "yyyy-MM-dd", timezone = "Europe/Madrid")
+    @JsonFormat(pattern = "yyyy-MM-dd", lenient = OptBoolean.FALSE)
     private Date dateOfJoin;
 
     @NotNull

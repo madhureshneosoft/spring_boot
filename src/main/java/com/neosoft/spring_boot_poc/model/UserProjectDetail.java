@@ -1,6 +1,8 @@
 package com.neosoft.spring_boot_poc.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.OptBoolean;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -39,7 +41,9 @@ public class UserProjectDetail {
     private boolean active;
 
     @NotNull
+    @JsonFormat(pattern = "yyyy-MM-dd", lenient = OptBoolean.FALSE)
     private Date startDate;
 
+    @JsonFormat(pattern = "yyyy-MM-dd", lenient = OptBoolean.FALSE)
     private Date endDate;
 }

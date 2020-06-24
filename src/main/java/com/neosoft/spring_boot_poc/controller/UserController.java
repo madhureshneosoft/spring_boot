@@ -6,6 +6,7 @@ import com.neosoft.spring_boot_poc.service.UserDetailService;
 import com.neosoft.spring_boot_poc.service.UserEmploymentDetailService;
 import com.neosoft.spring_boot_poc.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -19,13 +20,16 @@ public class UserController extends Validation {
     private final UserService userService;
 
     @Autowired
-    public UserController(UserService userService, UserDetailService userDetailService, UserEmploymentDetailService userEmploymentDetailService) {
-        super(userDetailService, userService,userEmploymentDetailService);
+    public UserController(UserService userService,
+                          UserDetailService userDetailService,
+                          UserEmploymentDetailService userEmploymentDetailService) {
+        super(userDetailService, userService, userEmploymentDetailService);
         this.userService = userService;
     }
 
     /**
      * Method to add user
+     *
      * @param user object
      * @return added user
      */
@@ -34,7 +38,7 @@ public class UserController extends Validation {
         ResponseEntity<Object> responseEntity = null;
         try {
             if (valid(user)) {
-               responseEntity = responseBuilder(userService.addUser(user));
+                responseEntity = responseBuilder(userService.addUser(user));
             }
         } catch (ApiError e) {
             responseEntity = responseBuilder(e);
@@ -44,71 +48,90 @@ public class UserController extends Validation {
 
     /**
      * Method to get all active user
+     *
      * @return list of users
      */
     @GetMapping("")
-    public List<User> getUsers(){
-        return userService.selectAllActiveUsers();
+    public ResponseEntity<Object> getUsers() {
+        return responseBuilder(userService.selectAllActiveUsers());
     }
 
     /**
      * Dynamic search new
+     *
      * @param string anything
      * @return list of user
      */
     @GetMapping("/getUser/{string}")
-    public Set<User> dynamic(@PathVariable("string")String string){
-        return new HashSet<>(userService.dynamicSearch(string));
+    public ResponseEntity<Object> dynamic(@PathVariable("string") String string) {
+        return responseBuilder(userService.dynamicSearch(string));
     }
 
     /**
      * Method to get all inactive user
+     *
      * @return list of user
      */
-    @GetMapping({"/inactive","/false"})
-    public Set<User> getInactiveUsers(){
-        return new HashSet<>(userService.selectAllInactiveUsers());
+    @GetMapping({"/inactive", "/false"})
+    public ResponseEntity<Object> getInactiveUsers() {
+        return responseBuilder(userService.selectAllInactiveUsers());
     }
 
     /**
      * Dynamically sort anything
+     *
      * @param anything field name
-     * @return  list of user
+     * @return list of user
      */
     @GetMapping("/sortBy{anything}")
-    public List<User> sortByAnything(@PathVariable("anything")String anything){
-        return userService.selectAllUserSortBy(anything);
+    public ResponseEntity<Object> sortByAnything(@PathVariable("anything") String anything) {
+        return responseBuilder(userService.selectAllUserSortBy(anything));
     }
 
     /**
      * Method to edit user
-     * @param id int
+     *
+     * @param id   int
      * @param user object in json
      * @return user edited
      */
     @PutMapping("/{userId}")
-    public User editUser(@PathVariable("userId") int id, @RequestBody User user){
-        return userService.editUser(user,id);
+    public User editUser(@PathVariable("userId") int id, @RequestBody User user) {
+        return userService.editUser(user, id);
     }
 
     /**
      * Method to delete user
+     *
      * @param id int
      */
     @DeleteMapping("/softDelete/{userId}")
-    public void softDeleteUser(@PathVariable("userId")int id){
+    public ResponseEntity<Object> softDeleteUser(@PathVariable("userId") int id) {
+        try {
+            valid(id);
+        } catch (ApiError e) {
+            return responseBuilder(e);
+        }
         User user = userService.selectUser(id);
         user.setActive(false);
-        userService.editUser(user,id);
+        userService.editUser(user, id);
+        return responseBuilder(user);
     }
 
     /**
      * Method to hard delete user
+     *
      * @param id int
      */
     @DeleteMapping("/hardDelete/{userId}")
-    public void hardDeleteUser(@PathVariable("userId")int id){
+    public ResponseEntity<Object> hardDeleteUser(@PathVariable("userId") int id) {
+        try {
+            valid(id);
+        } catch (ApiError e) {
+            return responseBuilder(e);
+        }
         userService.deleteUser(id);
+        return new ResponseEntity<>("User Permanently deleted from Database", HttpStatus.OK);
     }
 
 }

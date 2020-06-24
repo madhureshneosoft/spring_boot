@@ -2,6 +2,7 @@ package com.neosoft.spring_boot_poc.model;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.OptBoolean;
 import lombok.*;
 
 import javax.persistence.*;
@@ -34,11 +35,11 @@ public class User {
     private boolean active;
 
     @NotNull
-    @JsonFormat(pattern = "yyyy-MM-dd")
+    @JsonFormat(pattern = "yyyy-MM-dd", lenient = OptBoolean.FALSE)
     private Date createDate;
 
     @NotNull
-    @JsonFormat(pattern = "yyyy-MM-dd")
+    @JsonFormat(pattern = "yyyy-MM-dd", lenient = OptBoolean.FALSE)
     private Date updateDate;
 
     @JsonManagedReference

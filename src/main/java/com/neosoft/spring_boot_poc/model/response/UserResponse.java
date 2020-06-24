@@ -1,12 +1,16 @@
 package com.neosoft.spring_boot_poc.model.response;
 
 import com.neosoft.spring_boot_poc.model.*;
+import lombok.*;
 
 import java.util.List;
 
+@NoArgsConstructor
+@AllArgsConstructor
+@Getter
+@Setter
+@ToString
 public class UserResponse {
-
-    private int id;
 
     private String userName;
 
@@ -18,5 +22,5 @@ public class UserResponse {
 
     private List<UserProjectDetailResponse> userProjectDetail;
 
-    private UserRole userRole;
+    private UserRoleDetailResponse userRole;
 }

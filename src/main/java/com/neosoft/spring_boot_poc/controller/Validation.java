@@ -6,12 +6,15 @@ import com.neosoft.spring_boot_poc.model.User;
 import com.neosoft.spring_boot_poc.service.UserDetailService;
 import com.neosoft.spring_boot_poc.service.UserEmploymentDetailService;
 import com.neosoft.spring_boot_poc.service.UserService;
+import com.neosoft.spring_boot_poc.util.Factory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 
 import java.sql.Date;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -31,6 +34,14 @@ public abstract class Validation {
         this.userService = userService;
         this.userEmploymentDetailService = userEmploymentDetailService;
         gson = new Gson();
+    }
+
+    public boolean valid(int userId) throws ApiError {
+        if(userService.userExists(userId)){
+            return true;
+        } else {
+            throw new ApiError(HttpStatus.NO_CONTENT,"Invalid UserId",null);
+        }
     }
 
     public boolean valid(User user) throws ApiError {
@@ -65,6 +76,9 @@ public abstract class Validation {
         if (!projectValidator(user)) {
             errors.add("If project is valid it should not have end date, if project is inactive it should not have end date before start date");
         }
+        if(!dateValidator(user)){
+            errors.add("Invalid Date");
+        }
         if (errors.isEmpty()) {
             return true;
         } else {
@@ -73,11 +87,19 @@ public abstract class Validation {
     }
 
     protected ResponseEntity<Object> responseBuilder(User user) throws ApiError {
-        return new ResponseEntity<>(user, HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(gson.toJson(Factory.userToUserResponse(user)), HttpStatus.OK);
     }
 
     protected ResponseEntity<Object> responseBuilder(ApiError error) {
         return new ResponseEntity<>(gson.toJson(error), HttpStatus.BAD_REQUEST);
+    }
+
+    protected ResponseEntity<Object> responseBuilder(List<User> userList) {
+        if(userList.size()!=0) {
+            return new ResponseEntity<>(gson.toJson(Factory.userListToUserResponseList(userList)), HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(gson.toJson(new ApiError(HttpStatus.NO_CONTENT,"No User Found",null)), HttpStatus.NO_CONTENT);
+        }
     }
 
     public boolean birthDateJoinDateValidator(User user) {
@@ -128,6 +150,32 @@ public abstract class Validation {
         return user.getUserProjectDetail().stream().allMatch(userProjectDetail -> (!userProjectDetail.isActive()
                 && userProjectDetail.getEndDate().after(userProjectDetail.getStartDate()))
                 || (userProjectDetail.isActive() && null == userProjectDetail.getEndDate()));
+    }
+
+    public boolean dateValidator(User user) {
+        boolean flag;
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+        format.setLenient(false);
+        try {
+            format.parse(user.getUserDetail().getDateOfBirth().toString());
+            format.parse(user.getUserEmploymentDetail().getDateOfJoin().toString());
+            flag = user.getUserProjectDetail().stream().allMatch((userProjectDetail -> {
+                try {
+                    if (userProjectDetail.isActive()) {
+                        format.parse(userProjectDetail.getStartDate().toString());
+                    } else {
+                        format.parse(userProjectDetail.getStartDate().toString());
+                        format.parse(userProjectDetail.getEndDate().toString());
+                    }
+                } catch (ParseException e) {
+                    return false;
+                }
+                return true;
+            }));
+        } catch (ParseException e) {
+            return false;
+        }
+        return flag ;
     }
 
 }
